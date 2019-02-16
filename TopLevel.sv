@@ -1,23 +1,23 @@
 // Create Date:    2018.04.05
-// Design Name:    BasicProcessor
+// Design Name:    ACDC
 // Module Name:    TopLevel 
 // CSE141L
 // partial only										   
-module TopLevel(		   // you will have the same 3 ports
-    input     start,	   // init/reset, active high
-	input     CLK,		   // clock -- posedge used inside design
-    output    halt		   // done flag from DUT
-    );
+module ACDC (		   // you will have the same 3 ports
+  input start,	   // init/reset, active high
+	input CLK,		   // clock -- posedge used inside design
+  output halt		   // done flag from DUT
+);
 
-wire [ 9:0] PC;            // program count
+wire [ 7:0] PC;            // program count
 wire [ 8:0] Instruction;   // our 9-bit opcode
 wire [ 7:0] ReadA, ReadB;  // reg_file outputs
 wire [ 7:0] InA, InB, 	   // ALU operand inputs
             ALU_out;       // ALU result
 wire [ 7:0] regWriteValue, // data in to reg file
             memWriteValue, // data in to data_memory
-	   	    Mem_Out;	   // data out from data_memory
-wire        MEM_READ,	   // data_memory read enable
+	   	      Mem_Out;	   // data out from data_memory
+wire  MEM_READ,	   // data_memory read enable
 		    MEM_WRITE,	   // data_memory write enable
 			reg_wr_en,	   // reg_file write enable
 			sc_clr,        // carry reg clear

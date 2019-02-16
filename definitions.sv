@@ -3,18 +3,28 @@
 package definitions;
     
 // Instruction map
-    const logic [2:0]kADD  = 3'b000;
-    const logic [2:0]kLSH  = 3'b001;
-    const logic [2:0]kRSH  = 3'b010;
-    const logic [2:0]kXOR  = 3'b011;
-    const logic [2:0]kAND  = 3'b100;
-	const logic [2:0]kSUB  = 3'b101;
-	const logic [2:0]kCLR  = 3'b110;
+const logic [2:0]opLW  = 3'b000;
+const logic [2:0]opSW  = 3'b001;
+const logic [2:0]opADD  = 3'b010;
+const logic [2:0]opSUB  = 3'b011;
+const logic [2:0]opCEQ  = 3'b100;
+const logic [2:0]opCLT  = 3'b101;
+const logic [2:0]opSEI  = 3'b110;
+const logic [2:0]opOTHER = 3'b111;
+
+// Function map
+const logic [2:0]fnSHIFTL_X  = 3'b000;
+const logic [2:0]fnSHIFTL_F  = 3'b001;
+const logic [2:0]fnSHIFTL_O  = 3'b010;
+const logic [2:0]fnSHIFTR_X  = 3'b011;
+const logic [2:0]fnSHIFTR_F  = 3'b100;
+const logic [2:0]fnSHIFTR_O  = 3'b101;
+const logic [2:0]fnB0 = 3'b110;
+const logic [2:0]fnB1 = 3'b111;
+
 // enum names will appear in timing diagram
-    typedef enum logic[2:0] {
-        ADD, LSH, RSH, XOR,
-        AND, SUB, CLR } op_mne;
-// note: kADD is of type logic[2:0] (3-bit binary)
-//   ADD is of type enum -- equiv., but watch casting
-//   see ALU.sv for how to handle this   
+typedef enum logic[2:0] {
+    ADD, LSH, RSH, XOR,
+    AND, SUB, CLR } op_mne;
+ 
 endpackage // definitions

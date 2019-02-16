@@ -5,17 +5,18 @@
 // Revision 2018.01.27
 // Additional Comments: 
 //   combinational (unclocked) ALU
-import definitions::*;			  // includes package "definitions"
+import definitions::*;  // includes package "definitions"
+
 module ALU(
-  input [ 7:0] INPUTA,      	  // data inputs
-               INPUTB,
-  input [ 2:0] OP,				  // ALU opcode, part of microcode
-  input        SC_IN,             // shift in/carry in 
-  output logic [7:0] OUT,		  // or:  output reg [7:0] OUT,
-  output logic SC_OUT,			  // shift out/carry out
-  output logic ZERO,              // zero out flag
-  output logic BEVEN              // LSB of input B = 0
-    );
+  input [7:0] INPUTA,     // data inputs
+              INPUTB,
+  input [2:0] OP,				  // ALU opcode, part of microcode
+  input [2:0] FUNC,       // Last 3 bit for func O-type
+  input       SC_IN,      // shift in/carry in 
+  output logic [7:0] OUT, // output reg [7:0] OUT,
+  output logic SC_OUT,		// shift out/carry out or OVERFLOW
+  output logic FLAG,      // flag
+);
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
 	
