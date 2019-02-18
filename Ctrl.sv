@@ -4,22 +4,24 @@ import definitions::*;
 // inputs from instrROM, ALU flags
 // outputs to program_counter (fetch unit)
 module Ctrl (
-  input[ 8:0] Instruction,	   // machine code
-  input       ZERO,			   // ALU out[7:0] = 0
-              BEVEN,		   // ALU out[0]   = 0
+  input[8:0] Instruction,	   // machine code
+  input FLAG_IN, 
   output logic jump_en,
-               branch_en
+               branch_en,
+               flag_write
   );
 // jump on right shift that generates a zero
 always_comb
-  if((Instruction[2:0] ==  kRSH) && ZERO)
+begin
+  /*if ((Instruction[8:6] ==  kRSH) && ZERO)
     jump_en = 1;
   else
-    jump_en = 0;
-
-// branch every time ALU result LSB = 0 (even)
-assign branch_en = BEVEN;
-
+    jump_en = 0;*/
+  if (Instruction[8:6] == opCEQ || Instruction[8:6] == opCLT)
+    flag_write = 1;
+  else 
+    flag_write = 0;
+end
 endmodule
 
    // ARM instructions sequence

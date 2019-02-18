@@ -17,7 +17,6 @@ module ALU (
   output logic [7:0] OUT,     // output reg [7:0] OUT,
   output logic FLAG_OUT,      // Flag
   output logic OVERFLOW_OUT,	// shift out/carry out or OVERFLOW out
-  output logic flag_write,
   output logic overflow_write
   );
 	 
@@ -52,30 +51,6 @@ module ALU (
     endcase
 
     end
-  endcase
-
-  /**
-   * This case section deal with the control for flag and overflow
-   */
-  case (OP)
-    opADD : flag_write = 1'b0;
-    opSUB : flag_write = 1'b0;
-
-    opCEQ : flag_write = 1'b1;
-    opCLT : flag_write = 1'b0;
-    
-    default : begin
-      case (FUNC)
-        fnSHIFTL_X : flag_write = 1'b0;
-        fnSHIFTL_F : flag_write = 1'b0;
-        fnSHIFTL_O : flag_write = 1'b0;
-        fnSHIFTR_X : flag_write = 1'b0;
-        fnSHIFTR_F : flag_write = 1'b0;
-        fnSHIFTR_O : flag_write = 1'b0;
-        default: flag_write = 1'b0;
-      endcase
-    end
-
   endcase
 
   op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
