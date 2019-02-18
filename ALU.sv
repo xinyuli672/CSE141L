@@ -13,15 +13,20 @@ module ALU (
   input [2:0] OP,				  // ALU opcode, part of microcode
   input [2:0] FUNC,       // Last 3 bit for func O-type
   input       FLAG_IN,
-  input       OVERFLOW_IN,// shift in/carry in or OVERFLOW in
-  output logic [7:0] OUT, // output reg [7:0] OUT,
+  input       OVERFLOW_IN,    // shift in/carry in or OVERFLOW in
+  output logic [7:0] OUT,     // output reg [7:0] OUT,
   output logic FLAG_OUT,      // Flag
-  output logic OVERFLOW_OUT,		// shift out/carry out or OVERFLOW out
+  output logic OVERFLOW_OUT,	// shift out/carry out or OVERFLOW out
+  output logic flag_write,
+  output logic overflow_write
   );
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
 	
   always_comb begin
+  /**
+   * This case section deal witht the overflow and flag results, and also calculation 
+   */
   case (OP)
     opLW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
     opSW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
@@ -47,6 +52,30 @@ module ALU (
     endcase
 
     end
+  endcase
+
+  /**
+   * This case section deal with the control for flag and overflow
+   */
+  case (OP)
+    opADD : {flag_write, overflow_write} = {1'b0, 1'b1};
+    opSUB : {flag_write, overflow_write} = {1'b0, 1'b1};
+
+    opCEQ : {flag_write, overflow_write} = {1'b1, 1'b0};
+    opCLT : {flag_write, overflow_write} = {1'b0, 1'b1};
+    
+    default : begin
+      case (FUNC)
+        fnSHIFTL_X : {flag_write, overflow_write} = {1'b0, 1'b1};
+        fnSHIFTL_F : {flag_write, overflow_write} = {1'b0, 1'b1};
+        fnSHIFTL_O : {flag_write, overflow_write} = {1'b0, 1'b1};
+        fnSHIFTR_X : {flag_write, overflow_write} = {1'b0, 1'b1};
+        fnSHIFTR_F : {flag_write, overflow_write} = {1'b0, 1'b1};
+        fnSHIFTR_O : {flag_write, overflow_write} = {1'b0, 1'b1};
+        default: {flag_write, overflow_write} = {1'b0, 1'b0};
+      endcase
+    end
+
   endcase
 
   op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
