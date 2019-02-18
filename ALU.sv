@@ -58,21 +58,21 @@ module ALU (
    * This case section deal with the control for flag and overflow
    */
   case (OP)
-    opADD : {flag_write, overflow_write} = {1'b0, 1'b1};
-    opSUB : {flag_write, overflow_write} = {1'b0, 1'b1};
+    opADD : flag_write = 1'b0;
+    opSUB : flag_write = 1'b0;
 
-    opCEQ : {flag_write, overflow_write} = {1'b1, 1'b0};
-    opCLT : {flag_write, overflow_write} = {1'b0, 1'b1};
+    opCEQ : flag_write = 1'b1;
+    opCLT : flag_write = 1'b0;
     
     default : begin
       case (FUNC)
-        fnSHIFTL_X : {flag_write, overflow_write} = {1'b0, 1'b1};
-        fnSHIFTL_F : {flag_write, overflow_write} = {1'b0, 1'b1};
-        fnSHIFTL_O : {flag_write, overflow_write} = {1'b0, 1'b1};
-        fnSHIFTR_X : {flag_write, overflow_write} = {1'b0, 1'b1};
-        fnSHIFTR_F : {flag_write, overflow_write} = {1'b0, 1'b1};
-        fnSHIFTR_O : {flag_write, overflow_write} = {1'b0, 1'b1};
-        default: {flag_write, overflow_write} = {1'b0, 1'b0};
+        fnSHIFTL_X : flag_write = 1'b0;
+        fnSHIFTL_F : flag_write = 1'b0;
+        fnSHIFTL_O : flag_write = 1'b0;
+        fnSHIFTR_X : flag_write = 1'b0;
+        fnSHIFTR_F : flag_write = 1'b0;
+        fnSHIFTR_O : flag_write = 1'b0;
+        default: flag_write = 1'b0;
       endcase
     end
 
