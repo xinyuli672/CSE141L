@@ -31,7 +31,7 @@ module InstROM #(parameter A=3, W=3) (
     //opcode = 6 sei
       6 : InstOut = 'b110; 
     //opcode = 7 O-type
-      7 : InstOut = 'b110;
+      7 : InstOut = 'b111;
 
   endcase
 
