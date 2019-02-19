@@ -1,5 +1,5 @@
 // Create Date:    2017.01.25
-// Design Name:
+// Design Name:    ACDC
 // Module Name:    DataRAM
 // single address pointer for both read and write
 // CSE141L
