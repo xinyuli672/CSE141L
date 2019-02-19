@@ -9,26 +9,26 @@ module ACDC (		   // you will have the same 3 ports
   output halt		   // done flag from DUT
 );
 
-wire [ 7:0] PC;            // program count
-wire [ 8:0] Instruction;   // our 9-bit opcode
-wire [ 7:0] ReadA, ReadB;  // reg_file outputs
-wire [ 7:0] InA, InB, 	   // ALU operand inputs
-            ALU_out;       // ALU result
-wire [ 7:0] regWriteValue, // data in to reg file
-            memWriteValue, // data in to data_memory
-	   	      Mem_Out;	   // data out from data_memory
-wire  MEM_READ,	   // data_memory read enable
-		    MEM_WRITE,	   // data_memory write enable
-			reg_wr_en,	   // reg_file write enable
-			sc_clr,        // carry reg clear
-			sc_en,	       // carry reg enable
-		    SC_OUT,	       // to carry register
-			ZERO,		   // ALU output = 0 flag
-			BEVEN,		   // ALU input B is even flag
-            jump_en,	   // to program counter: jump enable
-            branch_en;	   // to program counter: branch enable
-logic[15:0] cycle_ct;	   // standalone; NOT PC!
-logic       SC_IN;         // carry register (loop with ALU)
+wire [7:0] PC;            	// program count
+wire [8:0] Instruction;   	// our 9-bit opcode
+wire [7:0] ReadA, ReadB;  	// reg_file outputs
+wire [7:0] InA, InB, 	   		// ALU operand inputs
+           ALU_out;       	// ALU result
+wire [7:0] regWriteValue, 	// data in to reg file
+           memWriteValue, 	// data in to data_memory
+	   	     Mem_Out;	   			// data out from data_memory
+wire  MEM_READ,	   					// data_memory read enable
+		  MEM_WRITE,	   			// data_memory write enable
+			reg_wr_en,	   	// reg_file write enable
+			sc_clr,        	// carry reg clear
+			sc_en,	       	// carry reg enable
+		  SC_OUT,	        // to carry register
+			ZERO,		   			// ALU output = 0 flag
+			BEVEN,		   		// ALU input B is even flag
+      jump_en,	   		// to program counter: jump enable
+      branch_en;	   	// to program counter: branch enable
+logic[15:0] cycle_ct;	   		// standalone; NOT PC!
+logic       SC_IN;         	// carry register (loop with ALU)
 
 // Fetch = Program Counter + Instruction ROM
 // Program Counter

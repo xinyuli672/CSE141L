@@ -7,42 +7,91 @@
 //   combinational (unclocked) ALU
 import definitions::*;  // includes package "definitions"
 
-module ALU(
-  input [7:0] INPUTA,     // data inputs
-              INPUTB,
+module ALU (
+  input [7:0] INPUTA,     // data input 1
+              INPUTB,     // data input 2
   input [2:0] OP,				  // ALU opcode, part of microcode
   input [2:0] FUNC,       // Last 3 bit for func O-type
-  input       SC_IN,      // shift in/carry in 
-  output logic [7:0] OUT, // output reg [7:0] OUT,
-  output logic SC_OUT,		// shift out/carry out or OVERFLOW
-  output logic FLAG,      // flag
-);
+  input       FLAG_IN,
+  input       OVERFLOW_IN,    // shift in/carry in or OVERFLOW in
+  output logic [7:0] OUT,     // output reg [7:0] OUT,
+  output logic FLAG_OUT,      // Flag
+  output logic OVERFLOW_OUT,	// shift out/carry out or OVERFLOW out
+  output logic flag_write,
+  output logic overflow_write
+  );
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
 	
   always_comb begin
-    {SC_OUT, OUT} = 0;            // default -- clear carry out and result out
-// single instruction for both LSW & MSW
-  case(OP)
-    kADD : {SC_OUT, OUT} = {1'b0,INPUTA} + INPUTB + SC_IN;  // add w/ carry-in & out
-    kLSH : {SC_OUT, OUT} = {INPUTA, SC_IN};  	            // shift left 
-	kRSH : {OUT, SC_OUT} = {SC_IN, INPUTA};			        // shift right
-//  kRSH : {OUT, SC_OUT} = (INPUTA << 1'b1) | SC_IN;
-// 	kXOR : begin 
-// 	         OUT    = INPUTA^INPUTB;  	     			   // exclusive OR
-//			 SC_OUT = 0;					   		       // clear carry out -- possible convenience
-//		   end
-    kAND : begin                                           // bitwise AND
-             OUT    = INPUTA & INPUTB;
-			 SC_OUT = 0;
-		   end
-    kSUB : begin
-	         OUT    = INPUTA + (~INPUTB) + SC_IN;	       // check me on this!
-			 SC_OUT = 0;                                   // check me on this!
-	       end
-    default: {SC_OUT,OUT} = 0;						       // no-op, zero out
+  /**
+   * This case section deal witht the overflow and flag results, and also calculation 
+   */
+  case (OP)
+    opLW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+    opSW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+
+    opADD : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + INPUTB + OVERFLOW_IN; 
+    opSUB : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + ~(INPUTB + OVERFLOW_IN);
+
+    opCEQ : (INPUTA == INPUTB) ? {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1} : {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+    opCLT : (INPUTA < INPUTB) ? {OVERFLOW_OUT, FLAG-OUT} = {1'b0, 1'b1} : {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+    opSEI : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+    default : begin
+
+    case (FUNC)
+      fnSHIFTL_X : {OVERFLOW_OUT, OUT} = {INPUTA, 1'b00};
+      fnSHIFTL_F : {OVERFLOW_OUT, OUT} = {INPUTA, FLAG_IN};
+      fnSHIFTL_O : {OVERFLOW_OUT, OUT} = {INPUTA, OVERFLOW_IN};
+      fnSHIFTR_X : {OUT, OVERFLOW_OUT} = {1'b00, INPUTA};
+      fnSHIFTR_F : {OUT, OVERFLOW_OUT} = {FLAG_IN, INPUTA};
+      fnSHIFTR_O : {OUT, OVERFLOW_OUT} = {OVERFLOW_IN, INPUTA};
+      //fnB0 : 
+      //fnB1 :
+      default : {OVERFLOW_OUT, OUT} = {1'b0, 0};
+    endcase
+
+    end
   endcase
-// option 2 -- separate LSW and MSW instructions
+
+  /**
+   * This case section deal with the control for flag and overflow
+   */
+  case (OP)
+    opADD : flag_write = 1'b0;
+    opSUB : flag_write = 1'b0;
+
+    opCEQ : flag_write = 1'b1;
+    opCLT : flag_write = 1'b0;
+    
+    default : begin
+      case (FUNC)
+        fnSHIFTL_X : flag_write = 1'b0;
+        fnSHIFTL_F : flag_write = 1'b0;
+        fnSHIFTL_O : flag_write = 1'b0;
+        fnSHIFTR_X : flag_write = 1'b0;
+        fnSHIFTR_F : flag_write = 1'b0;
+        fnSHIFTR_O : flag_write = 1'b0;
+        default: flag_write = 1'b0;
+      endcase
+    end
+
+  endcase
+
+  op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
+end			
+
+//always_comb BEVEN = OUT[0];          			  // note [0] -- look at LSB only
+
+// OP == 3'b101; //!INPUTB[0];               
+// always_comb	branch_enable = opcode[8:6]==3'b101? 1 : 0;  
+
+endmodule
+
+
+
+
+
 //    case(OP)
 //	  kADDL : {SC_OUT,OUT} = INPUTA + INPUTB ;    // LSW add operation
 //	  kLSAL : {SC_OUT,OUT} = (INPUTA<<1) ;  	  // LSW shift instruction
@@ -57,27 +106,3 @@ module ALU(
 //      kXOR  : OUT = INPUTA ^ INPUTB;
 //	  kBRNE : OUT = INPUTA - INPUTB;   // use in conjunction w/ instruction decode 
 //  endcase
-	case(OUT)
-	  'b0     : ZERO = 1'b1;
-	  default : ZERO = 1'b0;
-	endcase
-//$display("ALU Out %d \n",OUT);
-    op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
-  end											
-  always_comb BEVEN = OUT[0];          			  // note [0] -- look at LSB only
-//    OP == 3'b101; //!INPUTB[0];               
-// always_comb	branch_enable = opcode[8:6]==3'b101? 1 : 0;  
-endmodule
-
-
-
-	   /*
-			Left shift
-
-            
-			  input a = 10110011   sc_in = 1
-
-              output = 01100111
-			  sc_out =	1
-
-							   */
