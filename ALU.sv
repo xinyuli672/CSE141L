@@ -56,28 +56,4 @@ module ALU (
   op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
 end			
 
-//always_comb BEVEN = OUT[0];          			  // note [0] -- look at LSB only
-
-// OP == 3'b101; //!INPUTB[0];               
-// always_comb	branch_enable = opcode[8:6]==3'b101? 1 : 0;  
-
 endmodule
-
-
-
-
-
-//    case(OP)
-//	  kADDL : {SC_OUT,OUT} = INPUTA + INPUTB ;    // LSW add operation
-//	  kLSAL : {SC_OUT,OUT} = (INPUTA<<1) ;  	  // LSW shift instruction
-//	  kADDU : begin
-//	            OUT = INPUTA + INPUTB + SC_IN;    // MSW add operation
-//                SC_OUT = 0;   
-//              end
-//	  kLSAU : begin
-//	            OUT = (INPUTA<<1) + SC_IN;  	  // MSW shift instruction
-//                SC_OUT = 0;
-//               end
-//      kXOR  : OUT = INPUTA ^ INPUTB;
-//	  kBRNE : OUT = INPUTA - INPUTB;   // use in conjunction w/ instruction decode 
-//  endcase
