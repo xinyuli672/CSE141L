@@ -16,8 +16,7 @@ module ALU (
   input       OVERFLOW_IN,    // shift in/carry in or OVERFLOW in
   output logic [7:0] OUT,     // output reg [7:0] OUT,
   output logic FLAG_OUT,      // Flag
-  output logic OVERFLOW_OUT,	// shift out/carry out or OVERFLOW out
-  output logic overflow_write
+  output logic OVERFLOW_OUT	// shift out/carry out or OVERFLOW out
   );
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
@@ -33,21 +32,31 @@ module ALU (
     opADD : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + INPUTB + OVERFLOW_IN; 
     opSUB : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + ~(INPUTB + OVERFLOW_IN);
 
-    opCEQ : (INPUTA == INPUTB) ? {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1} : {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
-    opCLT : (INPUTA < INPUTB) ? {OVERFLOW_OUT, FLAG-OUT} = {1'b0, 1'b1} : {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+    opCEQ : begin
+	  if (INPUTA == INPUTB)
+      {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
+    else 
+      {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+    end
+    opCLT : begin
+      if (INPUTA < INPUTB)
+        {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
+      else 
+        {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+    end
     opSEI : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
     default : begin
 
     case (FUNC)
-      fnSHIFTL_X : {OVERFLOW_OUT, OUT} = {INPUTA, 1'b00};
+      fnSHIFTL_X : {OVERFLOW_OUT, OUT} = {INPUTA, 8'b0000_0000};
       fnSHIFTL_F : {OVERFLOW_OUT, OUT} = {INPUTA, FLAG_IN};
       fnSHIFTL_O : {OVERFLOW_OUT, OUT} = {INPUTA, OVERFLOW_IN};
-      fnSHIFTR_X : {OUT, OVERFLOW_OUT} = {1'b00, INPUTA};
+      fnSHIFTR_X : {OUT, OVERFLOW_OUT} = {8'b0000_0000, INPUTA};
       fnSHIFTR_F : {OUT, OVERFLOW_OUT} = {FLAG_IN, INPUTA};
       fnSHIFTR_O : {OUT, OVERFLOW_OUT} = {OVERFLOW_IN, INPUTA};
       //fnB0 : 
       //fnB1 :
-      default : {OVERFLOW_OUT, OUT} = {1'b0, 0};
+      default : {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
     endcase
 
     end

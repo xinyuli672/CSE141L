@@ -16,8 +16,8 @@ always @(posedge CLK)
     FLAG_OUT <= 0;
   end
   else if (flag_write) begin
-    FLAG_OUT <= FLAG_IN
+    FLAG_OUT <= FLAG_IN;
   end
-  else FLAG_OUT <= FLAG_OUT
+  else FLAG_OUT <= FLAG_OUT;
 endmodule
         

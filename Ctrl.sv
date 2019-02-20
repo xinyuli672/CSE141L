@@ -27,9 +27,9 @@ begin
 
   // write the overflow write control
   if (Instruction[8:6] == opADD || Instruction[8:6] == opSUB)
-    oveflow_write = 1;
+    overflow_write = 1;
   else if (Instruction[8:6] == opOTHER) begin
-    if (Instruction[2:0] != fnB0 && Instruction[2:0] != fbB1)
+    if (Instruction[2:0] != fnB0 && Instruction[2:0] != fnB1)
       overflow_write = 1;
     else 
       overflow_write = 0;

@@ -5,7 +5,7 @@
 
 module OVERFLOW (
   input init,
-        overfow_write,
+        overflow_write,
         OVERFLOW_IN,
 		CLK,
   output logic OVERFLOW_OUT
@@ -16,8 +16,8 @@ always @(posedge CLK)
     OVERFLOW_OUT <= 0;
   end
   else if (overflow_write) begin
-    OVERFLOW_OUT <= OVERFLOW_IN
+    OVERFLOW_OUT <= OVERFLOW_IN;
   end
-  else OVERFLOW_OUT <= 0
+  else OVERFLOW_OUT <= 0;
 endmodule
         
