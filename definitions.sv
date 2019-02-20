@@ -19,8 +19,8 @@ const logic [2:0]fnSHIFTL_O  = 3'b010;
 const logic [2:0]fnSHIFTR_X  = 3'b011;
 const logic [2:0]fnSHIFTR_F  = 3'b100;
 const logic [2:0]fnSHIFTR_O  = 3'b101;
-//const logic [2:0]fnB0 = 3'b110;
-//const logic [2:0]fnB1 = 3'b111;
+const logic [2:0]fnB0 = 3'b110;
+const logic [2:0]fnB1 = 3'b111;
 
 // enum names will appear in timing diagram
 typedef enum logic[2:0] {
