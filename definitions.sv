@@ -10,7 +10,7 @@ const logic [2:0]opSUB  = 3'b011;
 const logic [2:0]opCEQ  = 3'b100;
 const logic [2:0]opCLT  = 3'b101;
 const logic [2:0]opSEI  = 3'b110;
-//const logic [2:0]opOTHER = 3'b111;
+const logic [2:0]opOTHER = 3'b111;
 
 // Function map
 const logic [2:0]fnSHIFTL_X  = 3'b000;

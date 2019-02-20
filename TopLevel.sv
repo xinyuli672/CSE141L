@@ -24,7 +24,6 @@ wire  MEM_READ,	   					// data_memory read enable
 			sc_en,	       	// carry reg enable
 		  SC_OUT,	        // to carry register
 			ZERO,		   			// ALU output = 0 flag
-			BEVEN,		   		// ALU input B is even flag
       jump_en,	   		// to program counter: jump enable
       branch_en;	   	// to program counter: branch enable
 logic[15:0] cycle_ct;	   		// standalone; NOT PC!
@@ -43,11 +42,7 @@ logic       SC_IN;         	// carry register (loop with ALU)
 
 // Control decoder
   Ctrl Ctrl1 (
-	.Instruction,    // from instr_ROM
-	.ZERO,			 // from ALU: result = 0
-	.BEVEN,			 // from ALU: input B is even (LSB=0)
-	.jump_en,		 // to PC
-	.branch_en		 // to PC
+		.
   );
 // instruction ROM
   InstROM instr_ROM1(
@@ -72,7 +67,7 @@ logic       SC_IN;         	// carry register (loop with ALU)
 //	.raddrA ({Instruction[5:3],1'b0});
 //	.raddrB ({Instruction[5:3],1'b1});
 
-    assign InA = ReadA;						          // connect RF out to ALU in
+  assign InA = ReadA;						          // connect RF out to ALU in
 	assign InB = ReadB;
 	assign MEM_WRITE = (Instruction == 9'h111);       // mem_store command
 	assign regWriteValue = load_inst? Mem_Out : ALU_out;  // 2:1 switch into reg_file
