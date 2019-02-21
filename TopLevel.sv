@@ -26,10 +26,21 @@ wire  MEM_READ,	   // data_memory read enable
 			reg_wr_en,	   // reg_file write enable
       reg_wr_imm_en,  // reg_file write immidiate enable
 			overflow_write,	       // carry reg enable
-      flag_write,      // flag contro
+      flag_write,      // flag control
 			branch_en;	   // to program counter: branch enable
 logic[15:0] cycle_ct;	   // standalone; NOT PC!
-logic       SC_IN;         // carry register (loop with ALU) 
+
+// Fetch = Program Counter + Instruction ROM
+// Program Counter
+  IF IF1 (
+	.Init       (start), 
+	.Halt              ,  // SystemVerilg shorthand for .halt(halt), 
+	.branch_abs	       ,  // branch enable
+  .FLAG_IN           ,
+  .Target            ,
+	.CLK        (CLK)  ,  // (CLK) is required in Verilog, optional in SystemVerilog
+	.PC             	  // program count = index to instruction memory
+	);		
 
 // Control decoder
   Ctrl Ctrl1 (
@@ -91,18 +102,11 @@ logic       SC_IN;         // carry register (loop with ALU)
 		.reset		  (start)
 	);
 	
-	
 // count number of instructions executed
 always_ff @(posedge CLK)
   if (start == 1)	   // if(start)
   	cycle_ct <= 0;
   else if(halt == 0)   // if(!halt)
   	cycle_ct <= cycle_ct+16'b1;
-
-always_ff @(posedge CLK)    // carry/shift in/out register
-  if(sc_clr)				// tie sc_clr low if this function not needed
-    FLAG_IN <= 0;             // clear/reset the carry (optional)
-  else if(sc_en)			// tie sc_en high if carry always updates on every clock cycle (no holdovers)
-    SC_IN <= SC_OUT;        // update the carry  
 
 endmodule
