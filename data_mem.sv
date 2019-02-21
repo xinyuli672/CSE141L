@@ -3,7 +3,7 @@
 // Module Name:    DataRAM
 // single address pointer for both read and write
 // CSE141L
-module data_mem(
+module data_mem (
   input              CLK,
   input              reset,
   input [7:0]        DataAddress,
@@ -29,13 +29,11 @@ module data_mem(
       // you may initialize your memory w/ constants, if you wish
       for(int i=0;i<256;i++)
 	      core[i] <= 0;
-      core[ 16] <= 254;   // overrides the 0
-      core[244] <= 5;
-	end
+	  end
     else if (WriteMem) begin
       core[DataAddress] <= DataIn;
-    // optional diagnostic print statement
-	  $display("Memory write M[%d] = %d",DataAddress,DataIn);
+      // optional diagnostic print statement
+      $display("Memory write M[%d] = %d",DataAddress,DataIn);
     end
 
 endmodule
