@@ -11,7 +11,7 @@ module FLAG (
   output logic FLAG_OUT
   );
 
-always @(posedge CLK)
+always_ff @(posedge CLK)
   if (init) begin
     FLAG_OUT <= 0;
   end

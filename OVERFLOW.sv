@@ -11,7 +11,7 @@ module OVERFLOW (
   output logic OVERFLOW_OUT
   );
 
-always @(posedge CLK)
+always_ff @(posedge CLK)
   if (init) begin
     OVERFLOW_OUT <= 0;
   end
