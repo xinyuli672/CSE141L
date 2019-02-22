@@ -21,7 +21,7 @@ wire[7:0] regWriteValue, // data in to reg file
 wire Overflow_In, Overflow_Out, 
 		 Flag_In, Flag_Out;
 
-wire  MEM_READ,	   // data_memory read enable
+wire  MEM_READ,	   		// data_memory read enable
 			MEM_WRITE,	   // data_memory write enable
 			reg_wr_en,	   // reg_file write enable
       reg_wr_imm_en,  // reg_file write immidiate enable
@@ -39,7 +39,7 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
   .FLAG_IN           ,
   .Target            ,
 	.CLK        (CLK)  ,  // (CLK) is required in Verilog, optional in SystemVerilog
-	.PC             	  // program count = index to instruction memory
+	.PC         (PC)     	  // program count = index to instruction memory
 	);		
 
 // Control decoder
@@ -51,11 +51,12 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
   .overflow_write
   );
 
-// instruction ROM
+	// instruction ROM
   InstROM instr_ROM1(
 	.InstAddress   (PC), 
 	.InstOut       (Instruction)
 	);
+	
   assign load_inst = Instruction[8:6]==3'b000;  // calls out load specially
 
 
@@ -94,11 +95,11 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
   
 	data_mem data_mem1(
 		.DataAddress  (ReadA)    , 
-		.ReadMem      (1'b1),          //(MEM_READ) ,   always enabled 
+		.ReadMem      (MEM_READ) ,  
 		.WriteMem     (MEM_WRITE), 
 		.DataIn       (memWriteValue), 
 		.DataOut      (Mem_Out)  , 
-		.CLK 		  		     ,
+		.CLK 		  		(CLK)     ,
 		.reset		  (start)
 	);
 	
