@@ -7,7 +7,7 @@ module OVERFLOW (
   input init,
         overflow_write,
         OVERFLOW_IN,
-		CLK,
+		    CLK,
   output logic OVERFLOW_OUT
   );
 

@@ -26,37 +26,81 @@ module ALU (
    * This case section deal witht the overflow and flag results, and also calculation 
    */
   case (OP)
-    opLW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
-    opSW : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+    opLW : begin
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+      FLAG_OUT = FLAG_IN;
+    end
+    opSW : begin 
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+      FLAG_OUT = FLAG_IN;
+    end
 
-    opADD : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + INPUTB + OVERFLOW_IN; 
-    opSUB : {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + ~(INPUTB + OVERFLOW_IN);
+    opADD : begin
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + INPUTB + OVERFLOW_IN; 
+      FLAG_OUT = FLAG_IN;
+    end
+
+    opSUB : begin 
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + ~(INPUTB + OVERFLOW_IN);
+      FLAG_OUT = FLAG_IN;
+    end
 
     opCEQ : begin
-	  if (INPUTA == INPUTB)
-      {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
-    else 
-      {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
-    end
-    opCLT : begin
-      if (INPUTA < INPUTB)
+      if (INPUTA == INPUTB) begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
-      else 
+        OUT = 8'b0000_0000;
+      end else begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+        OUT = 8'b0000_0000;
+      end
     end
-    opSEI : {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+
+    opCLT : begin
+      if (INPUTA < INPUTB) begin
+        {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
+        OUT = 8'b0000_0000;
+      end else begin
+        {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
+        OUT = 8'b0000_0000;
+      end
+    end
+
+    opSEI : begin
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+      FLAG_OUT = FLAG_IN;
+    end
+
     default : begin
 
     case (FUNC)
-      fnSHIFTL_X : {OVERFLOW_OUT, OUT} = {INPUTA, 8'b0000_0000};
-      fnSHIFTL_F : {OVERFLOW_OUT, OUT} = {INPUTA, FLAG_IN};
-      fnSHIFTL_O : {OVERFLOW_OUT, OUT} = {INPUTA, OVERFLOW_IN};
-      fnSHIFTR_X : {OUT, OVERFLOW_OUT} = {8'b0000_0000, INPUTA};
-      fnSHIFTR_F : {OUT, OVERFLOW_OUT} = {FLAG_IN, INPUTA};
-      fnSHIFTR_O : {OUT, OVERFLOW_OUT} = {OVERFLOW_IN, INPUTA};
-      //fnB0 : 
-      //fnB1 :
-      default : {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
+      fnSHIFTL_X : begin
+        {OVERFLOW_OUT, OUT} = {INPUTA, 1'b0};
+        FLAG_OUT = FLAG_IN;
+      end
+      fnSHIFTL_F : begin  
+        {OVERFLOW_OUT, OUT} = {INPUTA, FLAG_IN};
+        FLAG_OUT = FLAG_IN;
+      end
+      fnSHIFTL_O : begin  
+        {OVERFLOW_OUT, OUT} = {INPUTA, OVERFLOW_IN};
+        FLAG_OUT = FLAG_IN;
+      end
+      fnSHIFTR_X : begin
+        {OUT, OVERFLOW_OUT} = {1'b0, INPUTA};
+        FLAG_OUT = FLAG_IN;
+      end
+      fnSHIFTR_F : begin
+        {OUT, OVERFLOW_OUT} = {FLAG_IN, INPUTA};
+        FLAG_OUT = FLAG_IN;
+      end
+      fnSHIFTR_O : begin
+        {OUT, OVERFLOW_OUT} = {OVERFLOW_IN, INPUTA};
+        FLAG_OUT = FLAG_IN;
+      end
+      default : begin
+        {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
+        FLAG_OUT = FLAG_IN;
+      end
     endcase
 
     end

@@ -6,23 +6,37 @@
 // Revision:  2019.01.27
 //
 module IF(
-  input Init,				    // reset, start, etc. 
-  input Halt,				    // 1: freeze PC; 0: run PC
+  input Init,				    // reset, start, etc.
   input CLK,				    // PC can change on pos. edges only
   input Branch_en,
   input FLAG_IN,
   input [9:0] Target,
+  input [1:0] ProgState,
   output logic [9:0] PC	// program counter
+  output Halt,				  // Done flag
   );
 	 
   always_ff @(posedge CLK)	            // or just always; always_ff is a linting construct
-    if (Init)
-      PC <= 0; // for first program; want different value for 2nd or 3rd
-    else if (Halt)
-      PC <= PC;
-    else if (Branch_en && FLAG_IN)	      // Conditional Jump
-      PC <= Target;
-    else
-      PC <= PC + 1;		                      // default increment (no need for ARM/MIPS +4 -- why?)
+    if (Init) begin
+      case (ProgState) begin
+        2'b00: PC <= 10'b00000_00001;     // PC of program 1
+        2'b01: PC <= 10'b00000_00001;     // PC of program 2
+        2'b10: PC <= 10'b00000_00010;     // PC of program 3
+        default: PC <= 10'b00000_00000;
+      end
+      Halt <= 1'b0; // Done flag
+    end
 
+    if (Branch_en && FLAG_IN)	begin      // Conditional Jump
+      PC <= Target;
+      Halt <= 1'b0;
+    end
+    else if ((ProgState == 2'b00) || (ProgState == 2'b01) || (ProgState == 2'b10)) begin
+      PC <= PC + 10'b00000_00001;
+      Halt <= 1'b1;
+    end
+    else begin
+      PC <= PC + 10'b00000_00001;		        // default increment (no need for ARM/MIPS +4 -- why?)
+      Halt <= 1'b0;
+    end
 endmodule

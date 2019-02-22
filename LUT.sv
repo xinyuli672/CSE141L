@@ -2,28 +2,25 @@
 // possible lookup table for PC target
 // leverage a few-bit pointer to a wider number
 module LUT(
-  input[4:0] addr,
-  output logic[9:0] Target
+  input[2:0] addr,
+  input[1:0] ProgState,
+  output logic[7:0] Target;
   );
 
+  logic[9:0] source [24];
+
+initial $readmemb("branch_target.txt", source); 
+
 always_comb begin
-  case (addr)		 
-	5'b00000: Target = 10'b0000000000;
-  5'b00001: Target = 10'b0000000000;
-  5'b00010: Target = 10'b0000000000;
-  5'b00011: Target = 10'b0000000000;
-  5'b00100: Target = 10'b0000000000;
-  5'b00101: Target = 10'b0000000000;
-  5'b00110: Target = 10'b0000000000;
-  5'b00111: Target = 10'b0000000000;
-  5'b01000: Target = 10'b0000000000;
-  5'b01001: Target = 10'b0000000000;
-  5'b01010: Target = 10'b0000000000;
-  5'b01011: Target = 10'b0000000000;
-  5'b01100: Target = 10'b0000000000;
-  5'b01101: Target = 10'b0000000000;
-  5'b01111: Target = 10'b0000000000;
-  default: Target = 10'b0000000000;
+  case ({ProgState, addr})
+  5'b00_000: Target = source[0];
+  5'b00_001: Target = source[1];
+  5'b00_010: Target = source[2];
+  5'b00_011: Target = source[3];
+  5'b00_100: Target = source[4];
+  5'b00_101: Target = source[5];
+  5'b00_110: Target = source[6];
+  5'b00_111: Target = source[7];
   endcase
 end
 endmodule

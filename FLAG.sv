@@ -7,7 +7,7 @@ module FLAG (
   input init,
         flag_write,
         FLAG_IN,
-		CLK,
+		    CLK,
   output logic FLAG_OUT
   );
 

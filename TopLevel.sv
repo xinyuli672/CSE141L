@@ -70,12 +70,13 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
     .init              (start)          ,
     .overflow_write    (overflow_write) ,
     .OVERFLOW_IN       (Overflow_In)    ,
-    .OVERFLOW_OUT      (Overflow_Out)
+    .OVERFLOW_OUT      (Overflow_Out)		,
+		.CLK							 (CLK)
   );
 	
 assign load_inst = Instruction[8:6]==3'b000;
-assign reg_wr_en = (Instruction[8:6]==3'b100 | Instruction[8:6] == 3'b101)? 0: 1;
-assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1:0;
+assign reg_wr_en = (Instruction[8:6]==3'b100 | Instruction[8:6] == 3'b101)? 1'b0: 1'b1;
+assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1'b1 : 1'b0;
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
 		.CLK    	 (CLK)               ,
@@ -101,12 +102,13 @@ assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1:0;
 	  .OP           (Instruction[8:6]) ,
     .FUNC         (Instruction[2:0]) ,
 	  .OUT          (ALU_out)          ,
-	  .FLAG_IN      (Flag_In)          ,
+	  .FLAG_IN      (Flag_Out)          ,
     .OVERFLOW_IN  (Overflow_Out)      ,
-	  .FLAG_OUT     (Flag_Out)         ,
+	  .FLAG_OUT     (Flag_In)         ,
     .OVERFLOW_OUT (Overflow_In)
 	  );
-  assign Flag_In = (ALU_out == 8'b00000000)? 8'b00000001: 8'b00000000;
+
+  //assign Flag_In = (ALU_out == 8'b00000000)? 8'b00000001: 8'b00000000;
   
   
   LUT lut1 (
