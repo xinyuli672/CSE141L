@@ -18,6 +18,8 @@ wire[7:0] ALU_InA,
 wire[7:0] regWriteValue, // data in to reg file
           memWriteValue, // data in to data_memory
 	   	    Mem_Out;	     // data out from data_memory
+
+wire[1:0] ProgState;
  
 wire Overflow_In, Overflow_Out, 
 		 Flag_In, Flag_Out;
@@ -31,6 +33,14 @@ wire  MEM_READ,	   		// data_memory read enable
 			branch_en;	   // to program counter: branch enable
 logic[15:0] cycle_ct;	   // standalone; NOT PC!
 
+logic[2:0] lookupCode;
+
+	ProgState ProgState1(
+		.Halt					(halt)			,
+		.CLK					(CLK)				,
+		.ProgState		(ProgState)
+	);
+
 // Fetch = Program Counter + Instruction ROM
 // Program Counter
   IF IF1 (
@@ -40,7 +50,8 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
   .FLAG_IN     (Flag_In)     ,
   .Target      (Target)      ,
 	.CLK         (CLK)         ,    // (CLK) is required in Verilog, optional in SystemVerilog
-	.PC          (PC)     	        // program count = index to instruction memory
+	.PC          (PC)     	 	 ,       // program count = index to instruction memory
+	.ProgState   (ProgState)
 	);		
 
 // Control decoder
@@ -76,7 +87,7 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
 	
 assign load_inst = Instruction[8:6]==3'b000;
 assign reg_wr_en = (Instruction[8:6]==3'b100 | Instruction[8:6] == 3'b101)? 1'b0: 1'b1;
-assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1'b1 : 1'b0;
+assign reg_wr_imm_en = (Instruction[8:6]==3'b110) ? 1'b1 : 1'b0;
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
 		.CLK    	 (CLK)               ,
@@ -109,10 +120,11 @@ assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1'b1 : 1'b0;
 	  );
 
   //assign Flag_In = (ALU_out == 8'b00000000)? 8'b00000001: 8'b00000000;
-  
+  assign lookupCode = Instruction[5:3];
   
   LUT lut1 (
-    .addr          (ReadA[4:0]),
+    .addr          (lookupCode),
+		.ProgState		 (ProgState),
     .Target        (Target)
   );
 

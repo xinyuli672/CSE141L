@@ -12,18 +12,18 @@ module IF(
   input FLAG_IN,
   input [9:0] Target,
   input [1:0] ProgState,
-  output logic [9:0] PC	// program counter
-  output Halt,				  // Done flag
+  output logic [9:0] PC,	// program counter
+  output logic Halt				  // Done flag
   );
 	 
-  always_ff @(posedge CLK)	            // or just always; always_ff is a linting construct
+  always_ff @(posedge CLK) begin	            // or just always; always_ff is a linting construct
     if (Init) begin
-      case (ProgState) begin
+      case (ProgState)
         2'b00: PC <= 10'b00000_00001;     // PC of program 1
         2'b01: PC <= 10'b00000_00001;     // PC of program 2
         2'b10: PC <= 10'b00000_00010;     // PC of program 3
         default: PC <= 10'b00000_00000;
-      end
+      endcase
       Halt <= 1'b0; // Done flag
     end
 
@@ -39,4 +39,5 @@ module IF(
       PC <= PC + 10'b00000_00001;		        // default increment (no need for ARM/MIPS +4 -- why?)
       Halt <= 1'b0;
     end
+  end
 endmodule

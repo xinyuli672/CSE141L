@@ -4,12 +4,12 @@
 module ProgState (
   input Halt,
 		    CLK,
-  output logic[1:0] ProgState
+  output logic[1:0] ProgState = 2'b00
   );
 
-initial begin
-  ProgState = 2'b00;
-end
+// initial begin
+//   ProgState <= 2'b00;
+// end
 
 always_ff @(posedge CLK)
   if (Halt) begin

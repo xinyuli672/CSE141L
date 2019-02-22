@@ -4,7 +4,7 @@
 module LUT(
   input[2:0] addr,
   input[1:0] ProgState,
-  output logic[7:0] Target;
+  output logic[9:0] Target
   );
 
   logic[9:0] source [24];
@@ -21,6 +21,25 @@ always_comb begin
   5'b00_101: Target = source[5];
   5'b00_110: Target = source[6];
   5'b00_111: Target = source[7];
+
+  5'b01_000: Target = source[0];
+  5'b01_001: Target = source[1];
+  5'b01_010: Target = source[2];
+  5'b01_011: Target = source[3];
+  5'b01_100: Target = source[4];
+  5'b01_101: Target = source[5];
+  5'b01_110: Target = source[6];
+  5'b01_111: Target = source[7];
+
+  5'b10_000: Target = source[0];
+  5'b10_001: Target = source[1];
+  5'b10_010: Target = source[2];
+  5'b10_011: Target = source[3];
+  5'b10_100: Target = source[4];
+  5'b10_101: Target = source[5];
+  5'b10_110: Target = source[6];
+  5'b10_111: Target = source[7];
+  default: Target = source[0];
   endcase
 end
 endmodule
