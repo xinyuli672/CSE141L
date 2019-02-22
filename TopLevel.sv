@@ -3,13 +3,13 @@
 // Module Name:    TopLevel 
 // CSE141L
 // partial only										   
-module ACDC (		   // you will have the same 3 ports
+module TopLevel (		   // you will have the same 3 ports
   input start,	   // init/reset, active high
 	input CLK,		   // clock -- posedge used inside design
   output halt		   // done flag from DUT
 );
 
-wire[9:0] PC;            // program count
+wire[9:0] PC, Target;            // program count
 wire[8:0] Instruction;   // our 9-bit opcode
 wire[7:0] ReadA, ReadB;  // reg_file outputs
 wire[7:0] ALU_InA,
@@ -36,8 +36,8 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
   IF IF1 (
 	.Init        (start)       , 
 	.Halt        (halt)        ,
-	.Branch_abs	 (Branch_abs)  ,
-  .FLAG_IN     (FLAG_IN)     ,
+	.Branch_en	 (branch_en)  ,
+  .FLAG_IN     (Flag_In)     ,
   .Target      (Target)      ,
 	.CLK         (CLK)         ,    // (CLK) is required in Verilog, optional in SystemVerilog
 	.PC          (PC)     	        // program count = index to instruction memory
@@ -45,20 +45,37 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
 
 // Control decoder
   Ctrl Ctrl1 (
-	.Instruction     (Instruction)    ,    // from instr_ROM
-	.FLAG_IN         (FLAG_IN)        ,		 
-	.branch_en		   (branch_en)      ,    
-  .flag_write      (flag_write)     ,
-  .overflow_write  (overflow_write) 
+	  .Instruction     (Instruction)    ,    // from instr_ROM
+	  .FLAG_IN         (Flag_In)        ,		 
+	  .branch_en		   (branch_en)      ,    
+    .flag_write      (flag_write)     ,
+    .overflow_write  (overflow_write)   
   );
 
 // instruction ROM
-  InstROM instr_ROM1(
-	.InstAddress   (PC)              , 
-	.InstOut       (Instruction)
+  InstROM instr_ROM1 (
+	  .InstAddress   (PC)              , 
+	  .InstOut       (Instruction)
 	);
-	
 
+  FLAG flag1 (
+    .init          (start)      ,
+    .flag_write    (flag_write) ,
+    .FLAG_IN       (Flag_In)    ,
+    .CLK           (CLK)        ,
+    .FLAG_OUT      (Flag_Out)
+  );
+
+  OVERFLOW overflow1(
+    .init              (start)          ,
+    .overflow_write    (overflow_write) ,
+    .OVERFLOW_IN       (Overflow_In)    ,
+    .OVERFLOW_OUT      (Overflow_Out)
+  );
+	
+assign load_inst = Instruction[8:6]==3'b000;
+assign reg_wr_en = (Instruction[8:6]==3'b100 | Instruction[8:6] == 3'b101)? 0: 1;
+assign reg_wr_imm_en = (Instruction[8:6]==3'b110)? 1:0;
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
 		.CLK    	 (CLK)               ,
@@ -72,26 +89,30 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
 		.data_outB (ReadB)
 	);
 
-  assign InA = ReadA;						   
-	assign InB = ReadB;
+  assign ALU_InA = ReadA;						   
+	assign ALU_InB = ReadB;
 	assign MEM_WRITE = (Instruction[8:6] == 9'b001);       // sw command
 	assign regWriteValue = load_inst? Mem_Out : ALU_out;  // 2:1 switch into reg_file
+  assign MEM_READ = (Instruction[8:6] == 9'b000);      //lw
+  assign memWriteValue = ALU_out;
     ALU ALU1  (
-	  .INPUTA       (InA)              ,
-	  .INPUTB       (InB)              ,  
+	  .INPUTA       (ALU_InA)          ,
+	  .INPUTB       (ALU_InB)          ,  
 	  .OP           (Instruction[8:6]) ,
     .FUNC         (Instruction[2:0]) ,
 	  .OUT          (ALU_out)          ,
-	  .FLAG_IN      (FLAG_IN)          ,
-    .OVERFLOW_IN  (OVERFLOW_IN)      ,
-	  .FLAG_OUT     (FLAG_OUT)         ,
-    .OVERFLOW_OUT (OVERFLOW_OUT)
+	  .FLAG_IN      (Flag_In)          ,
+    .OVERFLOW_IN  (Overflow_Out)      ,
+	  .FLAG_OUT     (Flag_Out)         ,
+    .OVERFLOW_OUT (Overflow_In)
 	  );
+  assign Flag_In = (ALU_out == 8'b00000000)? 8'b00000001: 8'b00000000;
   
-  LUT lut1{
-    .addr          (InA[4:0]),
+  
+  LUT lut1 (
+    .addr          (ReadA[4:0]),
     .Target        (Target)
-  }
+  );
 
 
 	data_mem data_mem1(

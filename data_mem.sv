@@ -17,15 +17,15 @@ module data_mem (
   // initial 
   // $readmemh("dataram_init.list", my_memory);
   always_comb                     // reads are combinational
-    if(ReadMem) begin
+    if (ReadMem) begin
       DataOut = core[DataAddress];
     // optional diagnostic print
-	  $display("Memory read M[%d] = %d",DataAddress,DataOut);
+	  $display("Memory read M[%d] = %d", DataAddress, DataOut);
     end else 
       DataOut = 'bZ;           // tristate, undriven
 
   always_ff @ (posedge CLK)		 // writes are sequential
-    if(reset) begin
+    if (reset) begin
       // you may initialize your memory w/ constants, if you wish
       for(int i=0;i<256;i++)
 	      core[i] <= 0;
