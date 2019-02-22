@@ -14,7 +14,8 @@ module Ctrl (
 always_comb
 begin
   // Write the branch enable
-  if ((Instruction[8:6] ==  opOTHER) && FLAG_IN)
+  if (Instruction[8:6] ==  opOTHER && (Instruction[2:0] == 3'b110
+      || Instruction[2:0] == 3'b111) && FLAG_IN)
     branch_en = 1;
   else
     branch_en = 0;
