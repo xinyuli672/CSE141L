@@ -102,9 +102,9 @@ logic[2:0] lookupCode;
 		.data_outB (ReadB)
 	);
 
-  assign ALU_InA = ReadA;						   
+  assign ALU_InA = (Instruction[8:6] == 3'b110) ? {2'b00, Instruction[5:0]} : ReadA;						   
 	assign ALU_InB = ReadB;
-	assign regWriteValue = (Instruction[8:6]== 3'b000)? Mem_Out : ALU_out;  // 2:1 switch into reg_file
+	assign regWriteValue = (Instruction[8:6] == 3'b000) ? Mem_Out : ALU_out;  // 2:1 switch into reg_file
   assign memWriteValue = ALU_out;
     ALU ALU1  (
 	  .INPUTA       (ALU_InA)          ,

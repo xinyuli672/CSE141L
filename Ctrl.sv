@@ -63,7 +63,7 @@ begin
       reg_wr_en = 1;
   end
   else
-      reg_wr_en = 1
+      reg_wr_en = 1;
   // register write immidate enable
   if(Instruction[8:6] == opSEI)
     reg_wr_imm_en = 1;

@@ -66,7 +66,7 @@ module ALU (
     end
 
     opSEI : begin
-      {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTA};
       FLAG_OUT = FLAG_IN;
     end
 
