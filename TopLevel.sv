@@ -36,7 +36,7 @@ logic[15:0] cycle_ct;	   // standalone; NOT PC!
 logic[2:0] lookupCode;
 
 	ProgState ProgState1(
-		.Halt					(halt)			,
+		.CLK					(CLK)			,
 		.ProgState		(ProgState) ,
 		.init					(start)
 	);
@@ -60,7 +60,11 @@ logic[2:0] lookupCode;
 	  .FLAG_IN         (Flag_In)        ,		 
 	  .branch_en		   (branch_en)      ,    
     .flag_write      (flag_write)     ,
-    .overflow_write  (overflow_write)   
+    .overflow_write  (overflow_write) ,
+		.MEM_READ        (MEM_READ)       ,
+		.MEM_WRITE       (MEM_WRITE)      ,
+		.reg_wr_en       (reg_wr_en)      ,
+		.reg_wr_imm_en   (reg_wr_imm_en) 
   );
 
 // instruction ROM
@@ -85,9 +89,7 @@ logic[2:0] lookupCode;
 		.CLK							 (CLK)
   );
 	
-assign load_inst = Instruction[8:6]==3'b000;
-assign reg_wr_en = (Instruction[8:6]==3'b100 | Instruction[8:6] == 3'b101)? 1'b0: 1'b1;
-assign reg_wr_imm_en = (Instruction[8:6]==3'b110) ? 1'b1 : 1'b0;
+assign load_inst = Instruction[8:6]== 3'b000;
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
 		.CLK    	 (CLK)               ,
@@ -103,9 +105,7 @@ assign reg_wr_imm_en = (Instruction[8:6]==3'b110) ? 1'b1 : 1'b0;
 
   assign ALU_InA = ReadA;						   
 	assign ALU_InB = ReadB;
-	assign MEM_WRITE = (Instruction[8:6] == 9'b001);       // sw command
 	assign regWriteValue = load_inst? Mem_Out : ALU_out;  // 2:1 switch into reg_file
-  assign MEM_READ = (Instruction[8:6] == 9'b000);      //lw
   assign memWriteValue = ALU_out;
     ALU ALU1  (
 	  .INPUTA       (ALU_InA)          ,
@@ -119,7 +119,7 @@ assign reg_wr_imm_en = (Instruction[8:6]==3'b110) ? 1'b1 : 1'b0;
     .OVERFLOW_OUT (Overflow_In)
 	  );
 
-  //assign Flag_In = (ALU_out == 8'b00000000)? 8'b00000001: 8'b00000000;
+  //assign Flag_In = (ALU_out == 8'b00000000)? 1: 0;
   assign lookupCode = Instruction[5:3];
   
   LUT lut1 (

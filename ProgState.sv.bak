@@ -1,0 +1,22 @@
+// CSE141L
+// Program State register
+
+module ProgState (
+  input init,
+        Halt,
+  output logic[1:0] ProgState
+  );
+
+// initial begin
+//   ProgState <= 2'b00;
+// end
+
+initial ProgState = 2'b00;
+
+always_comb begin
+  if (Halt)
+    ProgState = ProgState + 2'b01;
+  else ProgState = ProgState;
+end
+endmodule
+        

@@ -3,20 +3,27 @@
 
 module ProgState (
   input init,
-        Halt,
-  output logic[1:0] ProgState
+        CLK,
+  output logic[1:0] ProgState = 0
   );
 
-// initial begin
-//   ProgState <= 2'b00;
-// end
+logic[1:0] next_ProgState;
 
-always_comb
-  if (init)
-    ProgState = 2'b00;
-  else if (Halt)
-    ProgState = ProgState + 2'b01;
-  else ProgState = ProgState;
+always_comb next_ProgState = ProgState + 2'b01;
+
+always @(negedge init) 
+  ProgState <= next_ProgState;   // prog_state cycles through 1, 2, 3 following the init pulses the test bench provides
+
+
+//initial ProgState = 2'b00;
+
+//always_comb 
+//  if (Halt)
+//  begin
+//    ProgState = ProgState + 2'b01;
+//  end
+//  else ProgState = ProgState;
 
 endmodule
+
         
