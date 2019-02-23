@@ -12,30 +12,26 @@ module IF(
   input FLAG_IN,
   input [9:0] Target,
   input [1:0] ProgState,
-  output logic [9:0] PC,	// program counter
-  output logic Halt				  // Done flag
+  output logic [9:0] PC = 0,	// program counter
+  output logic Halt = 0			  // Done flag
   );
 	 
   always_ff @(posedge CLK) begin	            // or just always; always_ff is a linting construct
-    if (Init) begin
- //     if (PC == 10'b00000_01000)
-//        PC <= 10'b00000_01000;
-//      else
-        PC <= 10'b00000_00000;
-      Halt <= 1'b0; // Done flag
-    end
-
-    if (Branch_en && FLAG_IN)	begin      // Conditional Jump
-      PC <= Target;
-      Halt <= 1'b0;
-    end
-    else if ((PC == 10'b00000_01000)) begin
-      PC <= PC + 10'b00000_00001;
-      Halt <= 1'b1;
-    end
-    else begin
-      PC <= PC + 10'b00000_00001;		        // default increment (no need for ARM/MIPS +4 -- why?)
-      Halt <= 1'b0;
+    if (!Init) begin
+//        PC <= 10'b00000_00000;
+//        Halt <= 1'b0; // Done flag
+      if (Branch_en && FLAG_IN)	begin      // Conditional Jump
+        PC <= Target;
+        Halt <= 1'b0;
+      end
+      else if ((PC == 10'b00000_01000)) begin  // temp need to be changed
+        PC <= PC + 10'b00000_00001;
+        Halt <= 1'b1;
+      end
+      else begin
+         PC <= PC + 10'b00000_00001;
+         Halt <= 1'b0;
+      end
     end
   end
 endmodule
