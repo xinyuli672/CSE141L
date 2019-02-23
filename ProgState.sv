@@ -4,7 +4,6 @@
 module ProgState (
   input init,
         Halt,
-		    CLK,
   output logic[1:0] ProgState
   );
 
@@ -12,11 +11,12 @@ module ProgState (
 //   ProgState <= 2'b00;
 // end
 
-always_ff @(posedge CLK)
+always_comb
   if (init)
-    ProgState <= 2'b00;
+    ProgState = 2'b00;
   else if (Halt)
-    ProgState <= ProgState + 2'b01;
-  else ProgState <= ProgState;
+    ProgState = ProgState + 2'b01;
+  else ProgState = ProgState;
+
 endmodule
         
