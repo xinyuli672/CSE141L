@@ -88,8 +88,7 @@ logic[2:0] lookupCode;
     .OVERFLOW_OUT      (Overflow_Out)		,
 		.CLK							 (CLK)
   );
-	
-assign load_inst = Instruction[8:6]== 3'b000;
+
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
 		.CLK    	 (CLK)               ,
@@ -105,7 +104,7 @@ assign load_inst = Instruction[8:6]== 3'b000;
 
   assign ALU_InA = ReadA;						   
 	assign ALU_InB = ReadB;
-	assign regWriteValue = load_inst? Mem_Out : ALU_out;  // 2:1 switch into reg_file
+	assign regWriteValue = (Instruction[8:6]== 3'b000)? Mem_Out : ALU_out;  // 2:1 switch into reg_file
   assign memWriteValue = ALU_out;
     ALU ALU1  (
 	  .INPUTA       (ALU_InA)          ,
