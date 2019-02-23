@@ -38,7 +38,8 @@ logic[2:0] lookupCode;
 	ProgState ProgState1(
 		.Halt					(halt)			,
 		.CLK					(CLK)				,
-		.ProgState		(ProgState)
+		.ProgState		(ProgState) ,
+		.init					(start)
 	);
 
 // Fetch = Program Counter + Instruction ROM
