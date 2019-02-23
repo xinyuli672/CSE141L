@@ -57,13 +57,13 @@ begin
   if(Instruction[8:6] == opSW || Instruction[8:6] == opCEQ || Instruction[8:6] == opCLT)
     reg_wr_en = 0;
   else if (Instruction[8:6] == opOTHER) begin
-    if(Instruction[8:6] != fnB0 || Instruction[8:6] != fnB1)
-      reg_wr_en = 1;
-    else
+    if(Instruction[8:6] == fnB0 || Instruction[8:6] == fnB1)
       reg_wr_en = 0;
+    else
+      reg_wr_en = 1;
   end
   else
-      reg_wr_en = 0;
+      reg_wr_en = 1
   // register write immidate enable
   if(Instruction[8:6] == opSEI)
     reg_wr_imm_en = 1;
