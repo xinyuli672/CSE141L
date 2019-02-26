@@ -20,10 +20,10 @@ ADD R6, RIM
 # MAIN PROCESS 1
 Loop:
 # -- SHIFTING DIVIDEND
-SHIFTL.X R0
-SHIFTL.O R1
+SHIFTL_X R0
+SHIFTL_O R1
 # -- SHIFTING COMPARE
-SHIFTL.O R5	# get the overflow value from dividend 
+SHIFTL_O R5	# get the overflow value from dividend 
 
 # -- Compare whether Divisor <= Current compared bit
 CLT R2, R5
@@ -32,8 +32,8 @@ CEQ R2, R5
 
 Result2:	
 # -- SHIFTING QUOTIENT 
-SHIFTL.F R3	# get the overflow value from compare result 
-SHIFTL.O R4	
+SHIFTL_F R3	# get the overflow value from compare result 
+SHIFTL_O R4	
 
 B0 SkipSub
 SUB R5, R2	# R5 = Current compare value - Divisor
@@ -63,13 +63,13 @@ ADD R3, RIM	# Fractional
 # MAIN PROCESS 2
 FracLoop:
 # -- SHIFTING COMPARE
-SHIFTL.X R5
+SHIFTL_X R5
 CLT R2, R5 # Compare whether Divisor < Current compared bit
 B1 result3
 CEQ R2, R5
 
 Result3:
-SHIFTL.F R3 # Get the result to the fractional part
+SHIFTL_F R3 # Get the result to the fractional part
 
 B0 SkipSub2
 SUB R5, R2	# R5 = Current compare value - Divisor

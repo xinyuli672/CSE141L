@@ -1,166 +1,4 @@
-Program 1 - Multiplicative Inverse
-# LOAD ALL SOURCE DATA
-SEI 9
-LW R0, RIM	# LSB DIVISOR
-SEI 8
-LW R1, RIM	# MSB DIVISOR
-SEI 0
-ADD R2, RIM	# LSB FRACTIONAL RESULT
-ADD R3, RIM	# MSB FRACTIONAL RESULT
-ADD R4, RIM	# COMPARE REGISTER 1 LSB
-ADD R5, RIM # COMPARE REGISTER 2 MSB
-SEI 1
-ADD R4, RIM
-
-# SET COUNTER
-SEI 0
-ADD R6, RIM
-
-# MAIN PROCESS
-FracLoop:
-# -- SHIFTING COMPARE
-# Comparing MSB
-CLT R1, R5 
-B1 ResultLarger
-CEQ R1, R5
-B0 ResultSmaller
-
-# Comparing LSB
-CLT R0, R4
-B1 ResultLarger
-CEQ R0, R4
-B0 ResultSmaller
-
-ResultLarger:
-SUB R4, R0
-SUB R5, R1
-
-ResultSmaller:
-SHIFTL.F R2
-SHIFTL.O R3
-
-# SHIFT COMPARE REGISTER
-SHIFTL.X R4
-SHIFTL.O R5
-
-# -- ADD COUNTER
-SEI 1
-ADD R6, RIM
-SEI 8
-CEQ R6, RIM
-B0 FracLoop
-
-# STORE FRACTIONAL PART RESULT
-SEI 11
-SW R2, RIM
-SEI 10
-SW R3, RIM
-
-
-Program 2 - Divide
-# LOAD ALL SOURCE DATA
-SEI 1
-LW R0, RIM 	# LSB Dividend
-SEI 0		
-LW R1, RIM	# MSB Dividend 
-SEI 2
-LW R2, RIM	# Divisor
-
-# LOAD ALL RESULT DATA
-SEI 0
-ADD R3, RIM	# LSB Quotient Result
-ADD R4, RIM	# MSB Quotient Result
-ADD R5, RIM	# Register for compare
-
-# SET COUNTER
-SEI 0
-ADD R6, RIM
-
-/**
-# -- SHIFTING DIVIDEND INIT
-SHIFTL.X R0
-SHIFTL.O R1
-# -- SHIFTING COMPARE INIT
-SHIFTL.O R5	# get the overflow value from dividend 
-*/
-
-# MAIN PROCESS 1
-Loop:
-# -- SHIFTING DIVIDEND
-SHIFTL.X R0
-SHIFTL.O R1
-# -- SHIFTING COMPARE
-SHIFTL.O R5	# get the overflow value from dividend 
-
-# -- Compare whether Divisor <= Current compared bit
-CLT R2, R5
-B1 Result2
-CEQ R2, R5
-
-Result2:	
-# -- SHIFTING QUOTIENT 
-SHIFTL.F R3	# get the overflow value from compare result 
-SHIFTL.O R4	
-
-B0 SkipSub
-SUB R5, R2	# R5 = Current compare value - Divisor
-
-SkipSub: 
-# -- ADD COUNTER
-SEI 1
-ADD R6, RIM
-SEI 8
-CEQ R6, RIM
-B0 Loop
-
-# STORE QUOTIENT
-SEI 5
-SW R3, RIM
-SEI 4
-SW R4, RIM
-
-# RESTART COUNTER
-SEI 0
-ADD R6, RIM
-
-# PREPARE FRACTION
-SEI 0
-ADD R3, RIM	# Fractional 
-
-# MAIN PROCESS 2
-FracLoop:
-# -- SHIFTING COMPARE
-SHIFTL.X R5
-CLT R2, R5 # Compare whether Divisor < Current compared bit
-B1 result3
-CEQ R2, R5
-
-Result3:
-SHIFTL.F R3 # Get the result to the fractional part
-
-B0 SkipSub2
-SUB R5, R2	# R5 = Current compare value - Divisor
-
-SkipSub2:
-# -- ADD COUNTER
-SEI 1
-ADD R6, RIM
-SEI 7
-CEQ R6, RIM
-B0 FracLoop
-
-# STORE FRACTIONAL PART RESULT
-SEI 6
-SW R3, RIM
- 
-DEAL WITH DIVISOR 0, HOW??-> ASK
-
-
-
-
-
-
-Program 3 - Square Root
+#Program 3 - Square Root
 # LOAD ALL SOURCE DATA
 SEI 17
 LW R0, RIM 	# LSB 
@@ -182,16 +20,16 @@ ADD R5, RIM	  # INITIALIZE Register for compare
 LOOP:
 #X_n+1 = ½ * (X_n + a/X_n)
 #a/X_n => R4   ← DIVISION
-SHIFTL.X R0   # SHIFT DIVIDEND A
-SHIFTL.O R1  
-SHIFTL.O R5   # SHIFT COMPARE REG
+SHIFTL_X R0   # SHIFT DIVIDEND A
+SHIFTL_O R1  
+SHIFTL_O R5   # SHIFT COMPARE REG
 
 CLT R2, R5 # COMPARE DIVISOR WITH COMPARE REG
 B1 RESULT2
 CEQ R2, R5
 
 RESULT2:
-SHIFTL.F R4   # SHIFT QUOTIENT
+SHIFTL_F R4   # SHIFT QUOTIENT
 
 B0 SKIPSUB:
 SUB R5, R2 # COMPARE REG - DIVISOR
@@ -200,13 +38,13 @@ SKIPSUB:
 SEI 1
 ADD R7, RIM  # INCREMENT COUNTER
 SEI 8
-CEQ R7, RIM  # COMPARE IF COUNTER IS EQUAL TO 8
+CEQ R6, RIM  # COMPARE IF COUNTER IS EQUAL TO 8
 B0 LOOP
 
 # a/X_n + X_n => R4 = R4 + R2
 ADD R4, R2
 #½ SHIFT RIGHT BY 1 BIT 
-SHIFTR.X R4       # X_n+1 = ½ * (X_n + a/X_n)
+SHIFTR_X R4       # X_n+1 = ½ * (X_n + a/X_n)
 
 # CHECK IF X_n == X_n+1
 CEQ R2, R3
