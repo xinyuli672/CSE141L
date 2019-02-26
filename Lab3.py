@@ -27,12 +27,12 @@ w_file = open("Machine3.txt", "w")
 #5.      
 with open(filename, 'r') as f:
   for line in f:
-    print line
+    print(line)
     str_array = line.split()
     instruction = str_array[0]
 
-    print instruction
-    print str_array
+    print(instruction)
+    print(str_array)
 
     if instruction == "SEI": # I-type
       opcode = "110"
@@ -91,10 +91,10 @@ with open(filename, 'r') as f:
         op2 = "111"
       else:
         opcode = "error: undefined opcode"
-        print "error: undefined opcode"
+        print("error: undefined opcode")
     
       #7 registers
-      print op1
+      print(op1)
 
       if (op1 == "$R0,"):
         reg1 = "000"
