@@ -4,68 +4,53 @@ SEI 0
 LW R1, RIM 
 SEI 2
 LW R2, RIM
-
 SEI 0
 ADD R3, RIM
 ADD R4, RIM
-ADD R5, RIM	
-
-
+ADD R5, RIM
 SEI 0
 ADD R6, RIM
-
-Loop:
-SHIFTL_X R0
+SHIFTL_X R0 #Loop
 SHIFTL_O R1
 SHIFTL_O R5 
-
 CLT R2, R5
-B1 Result2
+B1 1
 CEQ R2, R5
-
-Result2:
-SHIFTL_F R3	
+SHIFTL_F R3	#Result2
 SHIFTL_O R4	
-
-B0 SkipSub
+B0 2
 SUB R5, R2
-
-SkipSub: 
-SEI 1
+SEI 1 #SkipSub
 ADD R6, RIM
 SEI 8
 CEQ R6, RIM
-B0 Loop
-
+B0 0
 SEI 5
 SW R3, RIM
 SEI 4
 SW R4, RIM
-
 SEI 0
 ADD R6, RIM
-
 SEI 0
 ADD R3, RIM
-
-FracLoop:
-SHIFTL_X R5
+SHIFTL_X R5 #FracLoop
 CLT R2, R5
-B1 result3
+B1 4
 CEQ R2, R5
-
-Result3:
-SHIFTL_F R3
-
-B0 SkipSub2
+SHIFTL_F R3 #Result3
+B0 5
 SUB R5, R2
-
-SkipSub2:
-SEI 1
+SEI 1 #SkipSub2
 ADD R6, RIM
 SEI 7
 CEQ R6, RIM
-B0 FracLoop
-
+B0 3
 SEI 6
 SW R3, RIM
+
+#Loop=0
+#Result2=1
+#SkipSub=2
+#FracLoop=3
+#Result3=4
+#SkipSub2=5
