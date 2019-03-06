@@ -19,7 +19,7 @@ always_comb
 begin
   // Write the branch enable
   if (Instruction[8:6] ==  opOTHER && (Instruction[2:0] == fnB0
-      || Instruction[2:0] == fnB1) && FLAG_IN)
+      || Instruction[2:0] == fnB1))
     branch_en = 1;
   else
     branch_en = 0;

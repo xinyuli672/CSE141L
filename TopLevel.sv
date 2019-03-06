@@ -22,7 +22,7 @@ wire[7:0] regWriteValue, // data in to reg file
 wire[1:0] ProgState;
  
 wire Overflow_In, Overflow_Out, 
-		 Flag_In, Flag_Out;
+		 Flag_In, Flag_Out, FlagBranchEn;
 
 wire  MEM_READ,	   		// data_memory read enable
 			MEM_WRITE,	   // data_memory write enable
@@ -47,7 +47,7 @@ logic[2:0] lookupCode;
 	.Init        (start)       , 
 	.Halt        (halt)        ,
 	.Branch_en	 (branch_en)  ,
-  .FLAG_IN     (Flag_In)     ,
+  .FLAG_IN     (FlagBranchEn)     ,
   .Target      (Target)      ,
 	.CLK         (CLK)         ,    // (CLK) is required in Verilog, optional in SystemVerilog
 	.PC          (PC)     	 	 ,       // program count = index to instruction memory
@@ -115,7 +115,8 @@ logic[2:0] lookupCode;
 	  .FLAG_IN      (Flag_Out)          ,
     .OVERFLOW_IN  (Overflow_Out)      ,
 	  .FLAG_OUT     (Flag_In)         ,
-    .OVERFLOW_OUT (Overflow_In)
+    .OVERFLOW_OUT (Overflow_In)			,
+		.FLAG_BRANCH_EN (FlagBranchEn)
 	  );
 
   //assign Flag_In = (ALU_out == 8'b00000000)? 1: 0;

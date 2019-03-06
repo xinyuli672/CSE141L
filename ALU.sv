@@ -16,7 +16,8 @@ module ALU (
   input       OVERFLOW_IN,    // shift in/carry in or OVERFLOW in
   output logic [7:0] OUT,     // output reg [7:0] OUT,
   output logic FLAG_OUT,      // Flag
-  output logic OVERFLOW_OUT	// shift out/carry out or OVERFLOW out
+  output logic OVERFLOW_OUT,	// shift out/carry out or OVERFLOW out
+  output logic FLAG_BRANCH_EN
   );
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
@@ -29,29 +30,35 @@ module ALU (
     opLW : begin
       {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
       FLAG_OUT = FLAG_IN;
+      FLAG_BRANCH_EN = 1'b0;
     end
     opSW : begin 
       {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
       FLAG_OUT = FLAG_IN;
+      FLAG_BRANCH_EN = 1'b0;
     end
 
     opADD : begin
       {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + INPUTB + OVERFLOW_IN; 
       FLAG_OUT = FLAG_IN;
+      FLAG_BRANCH_EN = 1'b0;
     end
 
     opSUB : begin 
       {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + ~(INPUTB + OVERFLOW_IN);
       FLAG_OUT = FLAG_IN;
+      FLAG_BRANCH_EN = 1'b0;
     end
 
     opCEQ : begin
       if (INPUTA == INPUTB) begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
         OUT = 8'b0000_0000;
+        FLAG_BRANCH_EN = 1'b0;
       end else begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
         OUT = 8'b0000_0000;
+        FLAG_BRANCH_EN = 1'b0;
       end
     end
 
@@ -59,15 +66,18 @@ module ALU (
       if (INPUTA < INPUTB) begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b1};
         OUT = 8'b0000_0000;
+        FLAG_BRANCH_EN = 1'b0;
       end else begin
         {OVERFLOW_OUT, FLAG_OUT} = {1'b0, 1'b0};
         OUT = 8'b0000_0000;
+        FLAG_BRANCH_EN = 1'b0;
       end
     end
 
     opSEI : begin
       {OVERFLOW_OUT, OUT} = {1'b0, INPUTA};
       FLAG_OUT = FLAG_IN;
+      FLAG_BRANCH_EN = 1'b0;
     end
 
     default : begin
@@ -76,26 +86,48 @@ module ALU (
       fnSHIFTL_X : begin
         {OVERFLOW_OUT, OUT} = {INPUTA, 1'b0};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
       end
       fnSHIFTL_F : begin  
         {OVERFLOW_OUT, OUT} = {INPUTA, FLAG_IN};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
       end
       fnSHIFTL_O : begin  
         {OVERFLOW_OUT, OUT} = {INPUTA, OVERFLOW_IN};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
       end
       fnSHIFTR_X : begin
         {OUT, OVERFLOW_OUT} = {1'b0, INPUTA};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
       end
       fnSHIFTR_F : begin
         {OUT, OVERFLOW_OUT} = {FLAG_IN, INPUTA};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
       end
       fnSHIFTR_O : begin
         {OUT, OVERFLOW_OUT} = {OVERFLOW_IN, INPUTA};
         FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
+      end
+      fnB0: begin
+        {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
+        FLAG_OUT = FLAG_IN;
+        if (!FLAG_IN)
+          FLAG_BRANCH_EN = 1'b1;
+        else
+          FLAG_BRANCH_EN = 1'b0;
+      end
+      fnB1: begin
+        {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
+        FLAG_OUT = FLAG_IN;
+        if (FLAG_IN)
+          FLAG_BRANCH_EN = 1'b1;
+        else
+          FLAG_BRANCH_EN = 1'b0;
       end
       default : begin
         {OVERFLOW_OUT, OUT} = {1'b0, 8'b0000_0000};
