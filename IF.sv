@@ -18,8 +18,6 @@ module IF(
 	 
   always_ff @(posedge CLK) begin	            // or just always; always_ff is a linting construct
     if (!Init) begin
-//        PC <= 10'b00000_00000;
-//        Halt <= 1'b0; // Done flag
       if (Branch_en && FLAG_IN)	begin      // Conditional Jump
         PC <= Target;
         Halt <= 1'b0;

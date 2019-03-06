@@ -27,7 +27,7 @@ always_comb data_outB = registers[raddrB];               // can read from addr 0
 
 // sequential (clocked) writes 
 always_ff @ (posedge CLK)
-  // reserve register[8] in reg file for special purpose register RIM
+  // reserve register[7] in reg file for special purpose register RIM
   if (write_en && write_imm)
     registers[7] <= data_in;
   else if (write_en)	                             

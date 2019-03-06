@@ -123,7 +123,6 @@ for x in range(0,3):
             elif (op1 == "R6,"):
               reg1 = "110"
 
-
             if (op2 == "R0"):
               reg2 = "000"
             elif (op2 == "R1"):

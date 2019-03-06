@@ -46,6 +46,7 @@ for(int j=0; j<16; j++)
                   DUT.data_mem1.core[7],
                   DUT.data_mem1.core[8]);
   $display("instruction = %d %t",DUT.PC,$time);
+  $display("register 1 = %d", DUT.reg_file1.registers[0]);
   #10ns $stop;			   
 end
 
