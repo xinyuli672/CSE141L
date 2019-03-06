@@ -27,15 +27,7 @@ initial begin
 #10ns for(int i=0; i<256; i++) begin
         DUT.data_mem1.core[i] = 8'h0;	     // clear data_mem
       end
-  
-  
-  //program 2
-  DUT.data_mem1.core[0] = 8'b0000_0000;      //dividend
-  DUT.data_mem1.core[1] = 8'b0000_0001;
-  DUT.data_mem1.core[2] = 8'b0000_0010;      //divisor
-  DUT.data_mem1.core[4] = 8'b0000_0000;      //quotient
-  DUT.data_mem1.core[5] = 8'b0000_0000;      //quotient
-  DUT.data_mem1.core[6] = 8'b0000_0000;      //quotient
+
   //program 3
   DUT.data_mem1.core[16] = 8'b0000_0000;      //operand
   DUT.data_mem1.core[17] = 8'b0001_0000;      //operand = 16
@@ -53,12 +45,9 @@ for(int j=0; j<16; j++)
 // Wait for done flag, then display results
   wait (halt);
   #10ns 
-  $display("addr[0] = ",DUT.data_mem1.core[0], "\n");
-  $display("addr[1] = ",DUT.data_mem1.core[1], "\n");
-  $display("addr[2] = ",DUT.data_mem1.core[2], "\n");
-  $display("addr[4] = ",DUT.data_mem1.core[4], "\n");
-  $display("addr[5] = ",DUT.data_mem1.core[5], "\n");
-  $display("addr[6] = ",DUT.data_mem1.core[6], "\n");
+  $display("addr[16] = ",DUT.data_mem1.core[16], "\n");
+  $display("addr[17] = ",DUT.data_mem1.core[17], "\n");
+  $display("addr[18] = ",DUT.data_mem1.core[18], "\n");
 
   $display("instruction = %d %t",DUT.PC,$time);
   $display("register 1 = %d", DUT.reg_file1.registers[0]);
