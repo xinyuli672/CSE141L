@@ -28,10 +28,14 @@ initial begin
         DUT.data_mem1.core[i] = 8'h0;	     // clear data_mem
       end
 
-  DUT.data_mem1.core[8] = 8'h00;      // MSW of operand A
-  DUT.data_mem1.core[9] = 8'h01;
-  DUT.data_mem1.core[10] = 8'h00;      // MSW of operand B
-  DUT.data_mem1.core[11] = 8'h00;
+  DUT.data_mem1.core[0] = 8'b0000_0000;      //dividend
+  DUT.data_mem1.core[1] = 8'b0000_0001;
+  DUT.data_mem1.core[2] = 8'b0000_0010;      //divisor
+  DUT.data_mem1.core[4] = 8'b0000_0000;      //quotient
+  DUT.data_mem1.core[5] = 8'b0000_0000;      //quotient
+  DUT.data_mem1.core[6] = 8'b0000_0000;      //quotient
+
+
 // students may also pre_load desired constants into data_mem
 // Initialize DUT's register file
 for(int j=0; j<16; j++)
@@ -43,10 +47,12 @@ for(int j=0; j<16; j++)
 // Wait for done flag, then display results
   wait (halt);
   #10ns 
-  $display("addr[8] = ",DUT.data_mem1.core[8], "\n");
-  $display("addr[9] = ",DUT.data_mem1.core[9], "\n");
-  $display("addr[10] = ",DUT.data_mem1.core[10], "\n");
-  $display("addr[11] = ",DUT.data_mem1.core[11], "\n");
+  $display("addr[0] = ",DUT.data_mem1.core[0], "\n");
+  $display("addr[1] = ",DUT.data_mem1.core[1], "\n");
+  $display("addr[2] = ",DUT.data_mem1.core[2], "\n");
+  $display("addr[4] = ",DUT.data_mem1.core[4], "\n");
+  $display("addr[5] = ",DUT.data_mem1.core[5], "\n");
+  $display("addr[6] = ",DUT.data_mem1.core[6], "\n");
 
   $display("instruction = %d %t",DUT.PC,$time);
   $display("register 1 = %d", DUT.reg_file1.registers[0]);

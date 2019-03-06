@@ -22,7 +22,7 @@ module IF(
         PC <= Target;
         Halt <= 1'b0;
       end
-      else if ((PC == 10'b00001_00100)) begin  // temp need to be changed
+      else if ((PC == 10'b00001_10010)) begin  // temp need to be changed
         PC <= PC + 10'b00000_00001;
         Halt <= 1'b1;
       end

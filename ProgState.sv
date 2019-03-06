@@ -14,16 +14,6 @@ always_comb next_ProgState = ProgState + 2'b01;
 always @(negedge init) 
   ProgState <= next_ProgState;   // prog_state cycles through 1, 2, 3 following the init pulses the test bench provides
 
-
-//initial ProgState = 2'b00;
-
-//always_comb 
-//  if (Halt)
-//  begin
-//    ProgState = ProgState + 2'b01;
-//  end
-//  else ProgState = ProgState;
-
 endmodule
 
         
