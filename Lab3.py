@@ -106,21 +106,21 @@ for x in range(0,3):
             #7 registers
             print(op1)
 
-            if (op1 == "R0," | op1 == "R0"):
+            if (op1 == "R0," or op1 == "R0"):
               reg1 = "000"
-            elif (op1 == "R1," | op1 == "R1"):
+            elif (op1 == "R1," or op1 == "R1"):
               reg1 = "001"
-            elif (op1 == "R2," | op1 == "R2"):
+            elif (op1 == "R2," or op1 == "R2"):
               reg1 = "010" 
-            elif (op1 == "R3," | op1 == "R3"):
+            elif (op1 == "R3," or op1 == "R3"):
               reg1 = "011"
-            elif (op1 == "R4," | op1 == "R4"):
+            elif (op1 == "R4," or op1 == "R4"):
               reg1 = "100"
-            elif (op1 == "R5," | op1 == "R5"):
+            elif (op1 == "R5," or op1 == "R5"):
               reg1 = "101"
-            elif (op1 == "R6," | op1 == "R6"):
+            elif (op1 == "R6," or op1 == "R6"):
               reg1 = "110"
-            elif (op1 == "RIM," | op1 == "RIM"):
+            elif (op1 == "RIM," or op1 == "RIM"):
               reg1 = "111"
             else:
               reg1 = str('{0:03b}'.format(int(op1)))

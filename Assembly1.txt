@@ -34,7 +34,3 @@ SEI 11
 SW R2, RIM
 SEI 10
 SW R3, RIM
-
-#fracloop = 0
-#result larger = 1
-#Result smaller  = 2
