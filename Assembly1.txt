@@ -9,39 +9,32 @@ ADD R4, RIM
 ADD R5, RIM
 SEI 1
 ADD R4, RIM
-
 SEI 0
 ADD R6, RIM
-
-FracLoop:
-CLT R1, R5 
-B1 ResultLarger
+CLT R1, R5 #Fracloop
+B1 1
 CEQ R1, R5
-B0 ResultSmaller
-
+B0 2
 CLT R0, R4
-B1 ResultLarger
+B1 1
 CEQ R0, R4
-B0 ResultSmaller
-
-ResultLarger:
-SUB R4, R0
+B0 2
+SUB R4, R0 #Result Larger
 SUB R5, R1
-
-ResultSmaller:
-SHIFTL_F R2
+SHIFTL_F R2 #Result Smaller
 SHIFTL_O R3
-
 SHIFTL_X R4
 SHIFTL_O R5
-
 SEI 1
 ADD R6, RIM
 SEI 8
 CEQ R6, RIM
-B0 FracLoop
-
+B0 0
 SEI 11
 SW R2, RIM
 SEI 10
 SW R3, RIM
+
+#fracloop = 0
+#result larger = 1
+#Result smaller  = 2
