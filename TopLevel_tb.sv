@@ -26,11 +26,18 @@ initial begin
 // Initialize DUT's data memory
 #10ns for(int i=0; i<256; i++) begin
   DUT.data_mem1.core[i] = 8'h0;	     // clear data_mem
-  DUT.data_mem1.core[1] = 8'h03;      // MSW of operand A
-  DUT.data_mem1.core[2] = 8'hff;
-  DUT.data_mem1.core[3] = 8'hff;      // MSW of operand B
-  DUT.data_mem1.core[4] = 8'hfb;
-end
+  end
+
+  DUT.data_mem1.core[8] = 8'h00;      // MSW of operand A
+  DUT.data_mem1.core[9] = 8'h01;
+  DUT.data_mem1.core[10] = 8'h00;      // MSW of operand B
+  DUT.data_mem1.core[11] = 8'h00;
+
+  $displayh("addr[8] = ", DUT.data_mem1.core[8],"\n");
+  $displayh("addr[9] = ", DUT.data_mem1.core[9],"\n");
+  $displayh("addr[10] = ", DUT.data_mem1.core[10],"\n");
+  $displayh("addr[11] = ", DUT.data_mem1.core[11],"\n");
+
 // students may also pre_load desired constants into data_mem
 // Initialize DUT's register file
 for(int j=0; j<16; j++)
@@ -41,11 +48,12 @@ for(int j=0; j<16; j++)
   #10ns start = 0;
 // Wait for done flag, then display results
   wait (halt);
-  #10ns $displayh(DUT.data_mem1.core[5],
-                  DUT.data_mem1.core[6],"_",
-                  DUT.data_mem1.core[7],
-                  DUT.data_mem1.core[8]);
-  $display("instruction = %d %t",DUT.PC,$time);
+  #10ns 
+  $displayh("addr[8] = ", DUT.data_mem1.core[8],"\n");
+  $displayh("addr[9] = ", DUT.data_mem1.core[9],"\n");
+  $displayh("addr[10] = ", DUT.data_mem1.core[10],"\n");
+  $displayh("addr[11] = ", DUT.data_mem1.core[11],"\n");
+
   $display("register 1 = %d", DUT.reg_file1.registers[0]);
   #10ns $stop;			   
 end
