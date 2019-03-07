@@ -27,7 +27,7 @@ initial begin
 #10ns for(int i=0; i<256; i++) begin
   DUT.data_mem1.core[i] = 8'h0;	     // clear data_mem
   end
-
+#10ns
   DUT.data_mem1.core[8] = 8'h00;      // MSW of operand A
   DUT.data_mem1.core[9] = 8'h01;
   DUT.data_mem1.core[10] = 8'h00;      // MSW of operand B
