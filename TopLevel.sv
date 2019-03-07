@@ -130,7 +130,7 @@ logic[2:0] lookupCode;
 
 
 	data_mem data_mem1(
-		.DataAddress  (ReadA)            , 
+		.DataAddress  (ReadB)            , 
 		.ReadMem      (MEM_READ)         ,  
 		.WriteMem     (MEM_WRITE)        , 
 		.DataIn       (memWriteValue)    , 
