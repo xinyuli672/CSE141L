@@ -20,11 +20,7 @@ module InstROM #(parameter A=10, W=9) (
   always_comb InstOut = inst_rom[InstAddress];
  
 initial begin		                  // load from external text file
-<<<<<<< HEAD
   $readmemb("Machine2.txt",inst_rom); 
-=======
-  $readmemb("Machine1.txt",inst_rom); 
->>>>>>> d395d23c3a90d8b33871155e899f2d50aab5c08b
 end
 
 endmodule
