@@ -41,8 +41,7 @@ for x in range(0,3):
             opcode = "110"
             imm = str_array[1]  
             bin_imm = '{0:06b}'.format(int(imm)) #6 bit immediate
-            return_set = opcode + bin_imm + '\t' + "#" + " " + instruction \
-                + " " + imm 
+            return_set = opcode + bin_imm
             w_file.write(return_set + '\n')
           else:      
             op1 = str_array[1]
@@ -144,14 +143,9 @@ for x in range(0,3):
             else: 
               reg2 = op2
             if otype == 1:
-              return_rtype = opcode + reg1 + reg2 \
-                        + '\t' + "#" + " " + instruction \
-                        + " " + op1
+              return_rtype = opcode + reg1 + reg2
             else:
-              return_rtype = opcode + reg1 + reg2 \
-                        + '\t' + "#" + " " + instruction \
-                        + " " + op1 + op2
-
+              return_rtype = opcode + reg1 + reg2
             w_file.write(return_rtype + '\n' )
 
 
