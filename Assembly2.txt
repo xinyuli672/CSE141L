@@ -42,9 +42,16 @@ B0 5
 SUB R5, R2
 SEI 1 #SkipSub2
 ADD R6, RIM
-SEI 7
+SEI 8
 CEQ R6, RIM
 B0 3
+SHIFTL_X R5
+CLT R2, R5
+B1 6
+CEQ R2, R5
+SEI 0 #Result4
+SHIFTL_F RIM
+ADD R3, RIM
 SEI 6
 SW R3, RIM
 
@@ -54,3 +61,4 @@ SW R3, RIM
 #FracLoop=3
 #Result3=4
 #SkipSub2=5
+#Result4=6
