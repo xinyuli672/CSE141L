@@ -41,6 +41,16 @@ logic[2:0] lookupCode;
 		.init					(start)
 	);
 
+	Exception Exception1 (
+		.ProgState 		(ProgState),
+  	.DataIn 			(Mem_Out),
+		.Instruction 	(Instruction),
+		.PC 					(PC),
+		.CLK					(CLK),
+		.divisor_msb	(),
+		.divisor_lsb	()
+	);
+
 // Fetch = Program Counter + Instruction ROM
 // Program Counter
   IF IF1 (
@@ -145,5 +155,4 @@ always_ff @(posedge CLK)
   	cycle_ct <= 0;
   else if(halt == 0)   // if(!halt)
   	cycle_ct <= cycle_ct+16'b1;
-
 endmodule
