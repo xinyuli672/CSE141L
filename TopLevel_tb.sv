@@ -30,7 +30,7 @@ initial begin
   
   DUT.data_mem1.core[0] = 8'b0000_0000;      //dividend
   DUT.data_mem1.core[1] = 8'b0000_0001;
-  DUT.data_mem1.core[2] = 8'b0000_0010;      //divisor
+  DUT.data_mem1.core[2] = 8'b0000_0001;      //divisor
   DUT.data_mem1.core[4] = 8'b0000_0000;      //quotient
   DUT.data_mem1.core[5] = 8'b0000_0000;      //quotient
   DUT.data_mem1.core[6] = 8'b0000_0000;      //quotient
