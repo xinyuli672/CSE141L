@@ -155,9 +155,5 @@ always_ff @(posedge CLK)
   	cycle_ct <= 0;
   else if(halt == 0)   // if(!halt)
   	cycle_ct <= cycle_ct+16'b1;
-<<<<<<< HEAD
 
 endmodule
-=======
-endmodule
->>>>>>> PROG1
