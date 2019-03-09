@@ -33,7 +33,7 @@ module ALU (
       FLAG_BRANCH_EN = 1'b0;
     end
     opSW : begin 
-      {OVERFLOW_OUT, OUT} = {1'b0, INPUTB};
+      {OVERFLOW_OUT, OUT} = {1'b0, INPUTA};
       FLAG_OUT = FLAG_IN;
       FLAG_BRANCH_EN = 1'b0;
     end

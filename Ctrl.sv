@@ -57,7 +57,7 @@ begin
   if(Instruction[8:6] == opSW || Instruction[8:6] == opCEQ || Instruction[8:6] == opCLT)
     reg_wr_en = 0;
   else if (Instruction[8:6] == opOTHER) begin
-    if(Instruction[8:6] == fnB0 || Instruction[8:6] == fnB1)
+    if(Instruction[2:0] == fnB0 || Instruction[2:0] == fnB1)
       reg_wr_en = 0;
     else
       reg_wr_en = 1;
