@@ -26,7 +26,13 @@ always_ff @(posedge CLK)
         $display("Exception: Divisor is 0\n");
     end
   end else if (ProgState == 2'b10) begin
+    if (Instruction == 9'b000_010_111) // lw R2, RIM
+      divisor_msb <= DataIn;
 
+    if (PC == 10'b00010_10100) begin
+      if (divisor_msb == 8'b0000_0000)
+        $display("Exception: Divisor is 0\n");
+    end
   end else if (ProgState == 2'b11) begin
 
   end else begin

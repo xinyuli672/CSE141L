@@ -88,6 +88,8 @@ initial begin
     dividend, divisor2, quotient1, result2, quotientR); 
   if(result2==result2_DUT) $display("success -- match2");
   else $display("OOPS2! expected %h, got %h",result2,result2_DUT); 
+
+/*
 // preload operands and launch program 3
   #10ns start = 1;
 // insert operand
@@ -106,7 +108,7 @@ initial begin
   else $display("OOPS3! expected %h, got %h",result3,result3_DUT);
   #10ns $stop;
 end
-
+*/
 task automatic div1;
   quotient1 = dividend/divisor1;
   result1 = quotient1[63:48]+quotient1[47];                                  // half-LSB upward rounding
@@ -120,7 +122,7 @@ task automatic div2;
   quotientR = $itor(div_in2)/$itor(divisor2);
 //  $display ("dividend = %h, divisor2 = %h, quotient = %h, result2 = %h, equiv to %10.5f",dividend, divisor2, quotient1, result2, quotientR); 
 endtask
-
+/*
 task automatic div3;
   argument = $itor(dat_in3);
 //  real error, result_new;
@@ -136,5 +138,5 @@ task automatic div3;
   if(!(&(result3))) 
     result3 = $rtoi(result+0.5);
 endtask
-
+*/
 endmodule
