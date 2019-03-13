@@ -101,6 +101,7 @@ logic[2:0] lookupCode;
 
 // reg file
 	reg_file #(.W(8),.D(3)) reg_file1 (
+		.Init			 (start)						 ,
 		.CLK    	 (CLK)               ,
 		.write_en  (reg_wr_en)         ,
     .write_imm (reg_wr_imm_en)     , 

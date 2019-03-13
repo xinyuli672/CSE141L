@@ -18,7 +18,7 @@ wire  done;			       // acknowledge back from DUT
 
 // your design goes here
 // *** change device and port names as needed ***
-DUT d1(.clk(clk), .start(start), .done(done));
+TopLevel d1(.CLK(clk), .start(start), .halt(done));
 
 // program 1 variables
 logic[63:0] dividend;      // fixed for pgm 1 at 64'h8000_0000_0000_0000;
@@ -53,16 +53,16 @@ initial begin
   divisor1 = 0;//3;            // *** try various values here ***
 // your memory gets loaded here
 // *** change names of memory or its guts as needed ***
-  d1.dat_mem1.core[8] = divisor1[15:8];
-  d1.dat_mem1.core[9] = divisor1[ 7:0];
+  d1.data_mem1.core[8] = divisor1[15:8];
+  d1.data_mem1.core[9] = divisor1[ 7:0];
   if(divisor1) div1;										// logical value of nonzero vector = 1; 
   else result1 = '1;    // 1/0 = all 1's (maximum value; "saturating logic")
   #20ns start = 0;
   #20ns wait(done);
 // your memory gets read here
 // *** change names of memory or its guts as needed ***
-  result1_DUT[15:8] = d1.dat_mem1.core[10];
-  result1_DUT[ 7:0] = d1.dat_mem1.core[11];
+  result1_DUT[15:8] = d1.data_mem1.core[10];
+  result1_DUT[ 7:0] = d1.data_mem1.core[11];
   $display ("divisor = %h, quotient = %h, result1 = %h, equiv to %10.5f", 
     divisor1, quotient1, result1, quotientR); 
   if(result1==result1_DUT) $display("success -- match1");
@@ -73,17 +73,17 @@ initial begin
   div_in2 = 16'h0001;	   // *** try various values here ***
   divisor2 = 0;//8'h03;		   // *** try various values here ***
 // *** change names of memory or its guts as needed ***
-  d1.dat_mem1.core[0] = div_in2[15:8];
-  d1.dat_mem1.core[1] = div_in2[ 7:0];
-  d1.dat_mem1.core[2] = divisor2;
+  d1.data_mem1.core[0] = div_in2[15:8];
+  d1.data_mem1.core[1] = div_in2[ 7:0];
+  d1.data_mem1.core[2] = divisor2;
   if(divisor2) div2; 							             // divisor2 is "true" only if nonzero
   else result2 = '1; // same as program 1: limit to max.
   #20ns start = 0;
   #20ns wait(done);
 // *** change names of memory or its guts as needed ***
-  result2_DUT[23:16] = d1.dat_mem1.core[4];
-  result2_DUT[15: 8] = d1.dat_mem1.core[5];
-  result2_DUT[ 7: 0] = d1.dat_mem1.core[6];
+  result2_DUT[23:16] = d1.data_mem1.core[4];
+  result2_DUT[15: 8] = d1.data_mem1.core[5];
+  result2_DUT[ 7: 0] = d1.data_mem1.core[6];
   $display ("dividend = %h, divisor2 = %h, quotient = %h, result2 = %h, equiv to %10.5f",
     dividend, divisor2, quotient1, result2, quotientR); 
   if(result2==result2_DUT) $display("success -- match2");
@@ -95,20 +95,20 @@ initial begin
 // insert operand
   dat_in3 = 0;//65535;		   // *** try various values here ***
 // *** change names of memory or its guts as needed ***
-  d1.dat_mem1.core[13] = dat_in3[15: 8];
-  d1.dat_mem1.core[14] = dat_in3[ 7: 0]; 
+  d1.data_mem1.core[13] = dat_in3[15: 8];
+  d1.data_mem1.core[14] = dat_in3[ 7: 0]; 
   if(dat_in3==0) result3 = 0;   // trap 0 case up front
   else div3;
   #20ns start = 0;
   #20ns wait(done);
 // *** change names of memory or its guts as needed ***
-  result3_DUT = d1.dat_mem1.core[15];     
+  result3_DUT = d1.data_mem1.core[15];     
   $display("operand = %h, sqrt = %h",dat_in3,result3);
   if(result3==result3_DUT) $display("success -- match3");
   else $display("OOPS3! expected %h, got %h",result3,result3_DUT);
+*/
   #10ns $stop;
 end
-*/
 task automatic div1;
   quotient1 = dividend/divisor1;
   result1 = quotient1[63:48]+quotient1[47];                                  // half-LSB upward rounding

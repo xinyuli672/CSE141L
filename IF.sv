@@ -22,7 +22,7 @@ module IF(
         PC <= Target;
         Halt <= 1'b0;
       end
-      else if ((PC == 10'b00001_00100) || (PC == 10'b00010_11011)) begin  // temp need to be changed
+      else if ((PC == 10'b00001_01100) || (PC == 10'b00011_00111)) begin  // temp need to be changed
         PC <= PC + 10'b00000_00001;
         Halt <= 1'b1;
       end
@@ -30,6 +30,12 @@ module IF(
          PC <= PC + 10'b00000_00001;
          Halt <= 1'b0;
       end
+    end else begin
+      if (ProgState == 2'b00) 
+        PC <= 10'b00000_00000;
+      else if (ProgState == 2'b01)
+        PC <= 10'b00001_01101;
+      else PC <= 10'b00000_00000;
     end
   end
 endmodule
