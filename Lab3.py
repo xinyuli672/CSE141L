@@ -6,7 +6,7 @@ print('Running Lab3:')
 
 #fileObj = open("filename", "mode") 
 filename = ["newProgram.txt"]
-writefile = ["MachineCode.txt"]
+writefile = ["machine_code.txt"]
 PC = 0
 for x in range(0,1):
   read_file = open(str(filename[x]), "r") 
@@ -158,8 +158,7 @@ for x in range(0,1):
         
         elif len(str_array) == 1:
           pc_imm = '{0:010b}'.format(PC)
-          w_file.write(str_array[0])
-          branch_file.write(pc_imm + " " + str(PC) + '\n')
+          branch_file.write(pc_imm + '\n')
 
         
 

@@ -66,13 +66,14 @@ CEQ R0, R4
 B0 3
 
 ADD:
+SHIFTL_F R6
 SEI 0
 ADD R0, R1
 CEQ R0, RIM
-B1 4
-SHIFTL_F R6
+B0 4
+SUB R6, R6
 
-ZERO:
+NONZERO:
 ADD R2, R6
 
 # STORE FRACTIONAL PART RESULT
@@ -85,7 +86,7 @@ SW R3, RIM
 # ResultLarger = 1
 # ResultSmaller = 2
 # ADD = 3
-# ZERO = 4
+# NONZERO = 4
 
 # PROGRAM 2
 
@@ -106,14 +107,23 @@ ADD R5, RIM	# Register for compare
 # SET COUNTER
 SEI 0
 ADD R6, RIM
+SEI 60
+SW R6, RIM
 
 # MAIN PROCESS 1
 Loop:
+SUB R6, R6
 # -- SHIFTING DIVIDEND
 SHIFTL_X R0
 SHIFTL_O R1
 # -- SHIFTING COMPARE
 SHIFTL_O R5	# get the overflow value from dividend 
+SHIFTL_O R6 # for big number divisor
+
+# -- Compare when big number -> overflow
+SEI 1
+CEQ R6, RIM
+B1 1
 
 # -- Compare whether Divisor <= Current compared bit
 CLT R2, R5
@@ -130,10 +140,14 @@ SUB R5, R2	# R5 = Current compare value - Divisor
 
 SkipSub: 
 # -- ADD COUNTER
+SEI 60
+LW R6, RIM
 SEI 1
 ADD R6, RIM
 SEI 16
 CEQ R6, RIM
+SEI 60
+SW R6, RIM
 B0 0
 
 # STORE QUOTIENT
@@ -181,7 +195,7 @@ SHIFTL_F R3
 # -- ADD COUNTER
 SEI 1
 ADD R6, RIM
-SEI 7
+SEI 8
 CEQ R6, RIM
 B0 3
 
@@ -205,10 +219,11 @@ CEQ R2, R5
 B0 6
 
 ADD:
+SHIFTL_F R6
 SEI 0
 CEQ R2, RIM
-B1 7
-SHIFTL_F R6
+B0 7
+SUB R6, R6
 
 ZERO:
 ADD R3, R6

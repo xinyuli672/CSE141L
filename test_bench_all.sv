@@ -50,7 +50,7 @@ initial begin
 // launch program 1
   start = 1;
   dividend = 64'h8000_0000_0000_0000;
-  divisor1 = 127;//3;            // *** try various values here ***
+  divisor1 = 0;//3;            // *** try various values here ***
 // your memory gets loaded here
 // *** change names of memory or its guts as needed ***
   d1.data_mem1.core[8] = divisor1[15:8];
@@ -70,8 +70,8 @@ initial begin
 // preload operands and launch program 2
   #10ns start = 1;
 // insert dividend and divisor
-  div_in2 = 254;//need 127	   // *** try various values here ***
-  divisor2 = 255;//need 255;		   // *** try various values here ***
+  div_in2 = 403;//need 257	   // *** try various values here ***
+  divisor2 = 0; //need 129;		   // *** try various values here ***
 // *** change names of memory or its guts as needed ***
   d1.data_mem1.core[0] = div_in2[15:8];
   d1.data_mem1.core[1] = div_in2[ 7:0];
