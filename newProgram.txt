@@ -1,0 +1,232 @@
+# PROGRAM 1
+# LOAD ALL SOURCE DATA
+SEI 9
+LW R0, RIM	# LSB DIVISOR
+SEI 8
+LW R1, RIM	# MSB DIVISOR
+SEI 0
+ADD R2, RIM	# LSB FRACTIONAL RESULT
+ADD R3, RIM	# MSB FRACTIONAL RESULT
+ADD R4, RIM	# COMPARE REGISTER 1 LSB
+ADD R5, RIM # COMPARE REGISTER 2 MSB
+SEI 1
+ADD R4, RIM
+
+# SET COUNTER
+SEI 0
+ADD R6, RIM
+
+# MAIN PROCESS
+FracLoop:
+# -- SHIFTING COMPARE
+# Comparing MSB
+CLT R1, R5 
+B1 1
+CEQ R1, R5
+B0 2
+
+# Comparing LSB
+CLT R0, R4
+B1 1
+CEQ R0, R4
+B0 2
+
+ResultLarger:
+SUB R4, R0
+SUB R5, R1
+
+ResultSmaller:
+SHIFTL_F R2
+SHIFTL_O R3
+
+# SHIFT COMPARE REGISTER
+SHIFTL_X R4
+SHIFTL_O R5
+
+# -- ADD COUNTER
+SEI 1
+ADD R6, RIM
+SEI 16
+CEQ R6, RIM
+B0 0
+
+SUB R6, R6
+
+# -- ROUNDING
+# Comparing MSB
+CLT R1, R5 
+B1 3
+CEQ R1, R5
+B0 3
+
+# Comparing LSB
+CLT R0, R4
+B1 3
+CEQ R0, R4
+B0 3
+
+ADD:
+SEI 0
+ADD R0, R1
+CEQ R0, RIM
+B1 4
+SHIFTL_F R6
+
+ZERO:
+ADD R2, R6
+
+# STORE FRACTIONAL PART RESULT
+SEI 11
+SW R2, RIM
+SEI 10
+SW R3, RIM
+
+# FracLoop = 0
+# ResultLarger = 1
+# ResultSmaller = 2
+# ADD = 3
+# ZERO = 4
+
+# PROGRAM 2
+
+# LOAD ALL SOURCE DATA
+SEI 1
+LW R0, RIM 	# LSB Dividend
+SEI 0		
+LW R1, RIM	# MSB Dividend 
+SEI 2
+LW R2, RIM	# Divisor
+
+# LOAD ALL RESULT DATA
+SEI 0
+ADD R3, RIM	# LSB Quotient Result
+ADD R4, RIM	# MSB Quotient Result
+ADD R5, RIM	# Register for compare
+
+# SET COUNTER
+SEI 0
+ADD R6, RIM
+
+# MAIN PROCESS 1
+Loop:
+# -- SHIFTING DIVIDEND
+SHIFTL_X R0
+SHIFTL_O R1
+# -- SHIFTING COMPARE
+SHIFTL_O R5	# get the overflow value from dividend 
+
+# -- Compare whether Divisor <= Current compared bit
+CLT R2, R5
+B1 1
+CEQ R2, R5
+
+Result2:	
+# -- SHIFTING QUOTIENT 
+SHIFTL_F R3	# get the overflow value from compare result 
+SHIFTL_O R4	
+
+B0 2
+SUB R5, R2	# R5 = Current compare value - Divisor
+
+SkipSub: 
+# -- ADD COUNTER
+SEI 1
+ADD R6, RIM
+SEI 16
+CEQ R6, RIM
+B0 0
+
+# STORE QUOTIENT
+SEI 5
+SW R3, RIM
+SEI 4
+SW R4, RIM
+
+# RESTART COUNTER
+SUB R6, R6
+
+# PREPARE FRACTION
+SUB R3, R3
+SUB R4, R4 
+SUB R1, R1
+
+# MAIN PROCESS 2
+FracLoop:
+# R5 -> lsb compare, R4 -> msb compare
+# R2 -> lsb divisor, R1 -> msb divisor
+
+# -- SHIFTING COMPARE
+SHIFTL_X R5
+SHIFTL_O R4
+
+# Comparing MSB
+CLT R1, R4 
+B1 4
+CEQ R1, R4
+B0 5
+
+# Comparing LSB
+CLT R2, R5
+B1 4
+CEQ R2, R5
+B0 5
+
+ResultLarger:
+SUB R5, R2
+SUB R4, R1
+
+ResultSmaller:
+SHIFTL_F R3
+
+# -- ADD COUNTER
+SEI 1
+ADD R6, RIM
+SEI 7
+CEQ R6, RIM
+B0 3
+
+SUB R6, R6
+
+# -- ROUNDING
+# -- SHIFTING COMPARE
+SHIFTL_X R5
+SHIFTL_O R4
+
+# Comparing MSB
+CLT R1, R4 
+B1 6
+CEQ R1, R4
+B0 6
+
+# Comparing LSB
+CLT R2, R5
+B1 6
+CEQ R2, R5
+B0 6
+
+ADD:
+SEI 0
+CEQ R2, RIM
+B1 7
+SHIFTL_F R6
+
+ZERO:
+ADD R3, R6
+
+# STORE FRACTIONAL PART RESULT
+SEI 6
+SW R3, RIM
+
+# Loop = 0
+# Result2 = 1
+# SkipSub = 2
+# FracLoop = 3
+# ResultLarger = 4
+# ResultSmaller = 5
+# ADD = 6
+# ZERO = 7
+
+
+
+
+
