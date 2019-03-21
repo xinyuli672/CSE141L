@@ -30,7 +30,7 @@ initial begin
 
   //program 3
   DUT.data_mem1.core[16] = 8'b0000_0000;      //operand
-  DUT.data_mem1.core[17] = 8'b0001_0000;      //operand = 16
+  DUT.data_mem1.core[17] = 8'b0000_0010;      //operand = 16
   DUT.data_mem1.core[18] = 8'b0000_0000;      //result = 4
 
 

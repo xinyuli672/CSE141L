@@ -22,7 +22,7 @@ module IF(
         PC <= Target;
         Halt <= 1'b0;
       end
-      else if ((PC == 10'b00011_10001)) begin  // 3 (113)
+      else if ((PC == 10'b00111_11111)) begin  // 3 (113)
         PC <= PC + 10'b00000_00001;
         Halt <= 1'b1;
       end
