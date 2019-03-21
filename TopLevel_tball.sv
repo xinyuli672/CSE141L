@@ -47,9 +47,6 @@ always begin
 end
 
 initial begin
-
-  
-
 // preload operands and launch program 3
   start = 1;
 
@@ -57,12 +54,18 @@ initial begin
         d1.data_mem1.core[i] = 8'h0;      // clear data_mem
       end
 // insert operand
-  dat_in3 = 16;//65535;		   // *** try various values here ***
+  dat_in3 = 241;//65535;		   // *** try various values here ***
 // *** change names of memory or its guts as needed ***
   d1.data_mem1.core[16] = dat_in3[15: 8];
   d1.data_mem1.core[17] = dat_in3[ 7: 0]; 
+  d1.data_mem1.core[18] = 8'h0;
+
   if(dat_in3==0) result3 = 0;   // trap 0 case up front
   else div3;
+
+  for(int j=0; j<16; j++)
+    d1.reg_file1.registers[j] = 8'b0;  
+
   #20ns start = 0;
   #20ns wait(done);
 // *** change names of memory or its guts as needed ***
