@@ -45,9 +45,14 @@ module ALU (
     end
 
     opSUB : begin 
-      {OVERFLOW_OUT, OUT} = {1'b0, INPUTA} + (((~INPUTB) + 8'b0000_0001) + OVERFLOW_IN);
-      FLAG_OUT = FLAG_IN;
-      FLAG_BRANCH_EN = 1'b0;
+      OUT = INPUTA + ((~INPUTB) + {7'b0000000, ~OVERFLOW_IN});
+      if (INPUTA < INPUTB)
+        OVERFLOW_OUT = 1'b1;
+      else begin
+        OVERFLOW_OUT = 1'b0;
+        FLAG_OUT = FLAG_IN;
+        FLAG_BRANCH_EN = 1'b0;
+      end
     end
 
     opCEQ : begin

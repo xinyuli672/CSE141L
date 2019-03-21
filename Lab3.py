@@ -1,13 +1,12 @@
-
-
 print('Running Lab3:')
 
 
 
 #fileObj = open("filename", "mode") 
-filename = ["Assembly1.txt", "Assembly2.txt", "Assembly3.txt"]
-writefile = ["Machine1.txt", "Machine2.txt", "Machine3.txt"]
-for x in range(0,3):
+filename = ["Assembly3.txt"]
+writefile = ["Machine3.txt"]
+PC = 0
+for x in range(0,1):
   read_file = open(str(filename[x]), "r") 
 
   #Print read_file
@@ -15,6 +14,7 @@ for x in range(0,3):
   #w_file is the file we are writing to
 
   w_file = open(str(writefile[x]), "w")
+  branch_file = open("branch_target.txt", 'w')
 
 
   #Open a file name and read each line
@@ -33,16 +33,20 @@ for x in range(0,3):
         str_array = line.split()
         instruction = str_array[0]
 
+
         print(str_array)
         if len(str_array)!=1:
           print(instruction)
           
-          if instruction == "SEI": # I-type
+          if instruction == "#":
+            print("comment\n")
+          elif instruction == "SEI": # I-type
             opcode = "110"
             imm = str_array[1]  
             bin_imm = '{0:06b}'.format(int(imm)) #6 bit immediate
             return_set = opcode + bin_imm
             w_file.write(return_set + '\n')
+            PC += 1
           else:      
             op1 = str_array[1]
             otype = 0
@@ -147,12 +151,15 @@ for x in range(0,3):
             else:
               return_rtype = opcode + reg1 + reg2
             w_file.write(return_rtype + '\n' )
+            PC += 1
+          
+        
+        elif len(str_array) == 1:
+          pc_imm = '{0:010b}'.format(PC)
+          branch_file.write(pc_imm + '\n')
 
+        
 
 
   w_file.close()
    
-
-      
-
-
