@@ -21,7 +21,7 @@ always_ff @(posedge CLK)
     end
 
     // Checking for 0
-    if (PC == 10'b00001_10011) begin
+    if (PC == 10'b00001_11010) begin
       if (divisor_msb == 8'b0000_0000 && divisor_lsb == 8'b0000_0000 ) 
         $display("Exception: Divisor is 0\n");
     end
@@ -30,7 +30,7 @@ always_ff @(posedge CLK)
       divisor_msb <= DataIn;
     else divisor_msb <= divisor_msb;
 
-    if (PC == 10'b00100_00110) begin
+    if (PC == 10'b00100_01101) begin
       if (divisor_msb == 8'b0000_0000)
         $display("Exception: Divisor is 0\n");
     end
