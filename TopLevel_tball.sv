@@ -54,7 +54,7 @@ initial begin
         d1.data_mem1.core[i] = 8'h0;      // clear data_mem
       end
 // insert operand
-  dat_in3 = 241;//65535;		   // *** try various values here ***
+  dat_in3 = 211;//65535;		   // *** try various values here ***
 // *** change names of memory or its guts as needed ***
   d1.data_mem1.core[16] = dat_in3[15: 8];
   d1.data_mem1.core[17] = dat_in3[ 7: 0]; 
